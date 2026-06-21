@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Trash icon">
+  <!-- Handle: shortened so the lower endpoints do not enter the lid rectangle. -->
+  <path d="M220 154
+           V122
+           Q220 98 244 98
+           H268
+           Q292 98 292 122
+           V154"
+        fill="none"
+        stroke="#000000"
+        stroke-width="28"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- Lid: slightly narrower than v2. -->
+  <rect x="116" y="166" width="280" height="50" rx="14"
+        fill="none"
+        stroke="#000000"
+        stroke-width="28"/>
+
+  <!-- Bin body: same narrowed body as v2, with top endpoints below the lid. -->
+  <path d="M146 232
+           L166 420
+           Q168 438 186 438
+           H326
+           Q344 438 346 420
+           L366 232"
+        fill="none"
+        stroke="#000000"
+        stroke-width="32"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- Vertical slots: spread like v1. -->
+  <path d="M210 274 L220 386"
+        fill="none"
+        stroke="#000000"
+        stroke-width="28"
+        stroke-linecap="round"/>
+  <path d="M256 274 V386"
+        fill="none"
+        stroke="#000000"
+        stroke-width="28"
+        stroke-linecap="round"/>
+  <path d="M302 274 L292 386"
+        fill="none"
+        stroke="#000000"
+        stroke-width="28"
+        stroke-linecap="round"/>
+</svg>

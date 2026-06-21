@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Outlined unlocked icon">
+  <path d="M184 226 V148 C184 108.24 216.24 76 256 76 C295.76 76 328 108.24 328 148 V174"
+        fill="none"
+        stroke="#000000"
+        stroke-width="36"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+  <path d="M 136 226 H 376 A 18 18 0 0 1 394 244 V 434 A 18 18 0 0 1 376 452 H 136 A 18 18 0 0 1 118 434 V 244 A 18 18 0 0 1 136 226 Z M 154 258 H 358 A 4 4 0 0 1 362 262 V 416 A 4 4 0 0 1 358 420 H 154 A 4 4 0 0 1 150 416 V 262 A 4 4 0 0 1 154 258 Z"
+        fill="#000000"
+        fill-rule="evenodd"/>
+  <circle cx="256" cy="318" r="25" fill="#000000"/>
+  <path d="M246 340 H266 L272 392
+           Q272 404 260 404
+           H252
+           Q240 404 240 392
+           Z"
+        fill="#000000"/>
+</svg>

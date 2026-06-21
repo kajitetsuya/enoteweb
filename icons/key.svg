@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Key icon">
+  <g transform="translate(256 256) scale(2.0458) translate(-113.95 -111.182)">
+    <g fill="none" stroke="#000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" transform="rotate(-45 152.75 70.28)">
+      <!-- Outer contour built as one connected path: straight equal-width shaft/teeth plus a true circular arc for the handle, leaving the shaft-side circle segment open. -->
+      <path stroke-width="12.25" d="M94.24 57 L-25 57 L-25 86 L-12.5 86 L-12.5 102 L10.5 102 L10.5 86 L28.5 86 L28.5 102 L51.5 102 L51.5 86 L94.85 86 A60 60 0 1 0 94.24 57 Z"/>
+      <circle cx="171.63" cy="70.28" r="14.20" stroke-width="12.25"/>
+    </g>
+  </g>
+</svg>

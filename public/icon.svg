@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Encryption icon">
+  <!-- Outside the white outline is transparent. Original outline width was 8; this version uses 24. -->
+  <circle cx="256" cy="256" r="218.89"
+          fill="#000000"
+          stroke="#FFFFFF"
+          stroke-width="24"/>
+
+  <g transform="translate(256 256) scale(1.3029) translate(-256 -256)">
+    <!-- Former transparent lock parts, now explicitly white. -->
+    <path d="M214 218
+             V186
+             C214 156 233 137 256 137
+             C279 137 298 156 298 186
+             V218"
+          fill="none"
+          stroke="#FFFFFF"
+          stroke-width="28"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+    <path d="M180 218 H332
+             Q348 218 348 234
+             V336
+             Q348 352 332 352
+             H180
+             Q164 352 164 336
+             V234
+             Q164 218 180 218 Z"
+          fill="#FFFFFF"/>
+
+    <!-- Keyhole remains black inside the white lock body. -->
+    <circle cx="256" cy="271" r="14" fill="#000000"/>
+    <path d="M249 283 H263 L271 315 H241 Z" fill="#000000"/>
+  </g>
+</svg>

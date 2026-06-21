@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Filled locked icon">
+  <path d="M184 226 V148 C184 108.24 216.24 76 256 76 C295.76 76 328 108.24 328 148 V226"
+        fill="none"
+        stroke="#000000"
+        stroke-width="36"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+  <defs>
+    <mask id="lock-filled-v3-keyhole-mask">
+      <rect x="0" y="0" width="512" height="512" fill="white"/>
+      <circle cx="256" cy="318" r="25" fill="black"/>
+      <path d="M246 340 H266 L272 392
+               Q272 404 260 404
+               H252
+               Q240 404 240 392
+               Z"
+            fill="black"/>
+    </mask>
+  </defs>
+  <rect x="118" y="226" width="276" height="226" rx="18"
+        fill="#000000"
+        mask="url(#lock-filled-v3-keyhole-mask)"/>
+</svg>

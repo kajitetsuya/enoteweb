@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Undo icon">
+  <g transform="translate(256 256) scale(1.5) translate(-256 -245.508)">
+    <path d="M301 346
+             C349 346 379 318 379 276
+             C379 234 347 206 297 206
+             H135"
+          fill="none" stroke="#000000" stroke-width="42"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M135 206 L193 148 M135 206 L193 264"
+          fill="none" stroke="#000000" stroke-width="48"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

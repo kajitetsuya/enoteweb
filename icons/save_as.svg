@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Save as icon">
+  <defs>
+    <mask id="save-as-v5-floppy-mask">
+      <rect width="512" height="512" fill="white"/>
+      <circle cx="350" cy="350" r="92" fill="black"/>
+    </mask>
+  </defs>
+
+  <g transform="translate(256 256) scale(1.25) translate(-256 -266)">
+    <g mask="url(#save-as-v5-floppy-mask)">
+      <path d="M142 122 H326
+               L390 186
+               V390
+               Q390 410 370 410
+               H142
+               Q122 410 122 390
+               V142
+               Q122 122 142 122 Z"
+            fill="none" stroke="#000000" stroke-width="32"
+            stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M176 122 V226
+               H320
+               V122"
+            fill="none" stroke="#000000" stroke-width="32"
+            stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M206 410 V304
+               H306
+               V410"
+            fill="none" stroke="#000000" stroke-width="32"
+            stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M286 154 V198"
+            fill="none" stroke="#000000" stroke-width="26"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <circle cx="350" cy="350" r="72"
+            fill="none" stroke="#000000" stroke-width="24"/>
+
+    <path d="M336 304 H364 V336 H396 V364 H364 V396 H336 V364 H304 V336 H336 Z"
+          fill="#000000"/>
+  </g>
+</svg>

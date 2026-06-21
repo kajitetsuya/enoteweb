@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Home icon">
+  <g transform="translate(256 256) scale(1.4218) translate(-256 -260.505)">
+    <path d="M119 245 L256 124 L393 245"
+          fill="none" stroke="#000000" stroke-width="34"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M158 223 V397 H220 V304 H292 V397 H354 V223"
+          fill="none" stroke="#000000" stroke-width="34"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

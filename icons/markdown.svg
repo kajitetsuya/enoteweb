@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Markdown download icon">
+  <g transform="translate(256 256) scale(1.0139) translate(-244 -256)">
+    <path d="M58 144
+             H112
+             L180 244
+             L248 144
+             H302
+             V368
+             H248
+             V246
+             L180 336
+             L112 246
+             V368
+             H58
+             Z"
+          fill="#000000"/>
+    <path d="M386 144
+             H442
+             V276
+             H490
+             L414 368
+             L338 276
+             H386
+             Z"
+          fill="#000000"/>
+  </g>
+</svg>

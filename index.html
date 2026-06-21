@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="A local-first encrypted text editor." />
+    <!-- Relative hrefs (no leading slash) so the icon, apple-touch-icon, and
+         manifest resolve under the deployed base, not the domain root (SPEC §14).
+         index.html is served at the base, so `icon.svg` resolves to
+         `${base}icon.svg`; a domain-root deploy keeps the base at `/`. -->
+    <link rel="icon" type="image/svg+xml" href="icon.svg" />
+    <!-- iOS "Add to Home Screen" uses this opaque PNG (iOS ignores SVG icons and
+         fills transparency with black); without it iOS falls back to a dark page
+         screenshot. -->
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <title>eNoteWeb</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

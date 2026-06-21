@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Local storage icon">
+  <!-- Monitor outline: one connected path, with rounded corners. -->
+  <path d="M218 110
+           H82
+           Q48 110 48 144
+           V384
+           Q48 416 80 416
+           H430
+           Q448 416 448 398
+           V274"
+        fill="none"
+        stroke="#000000"
+        stroke-width="40"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- Centered monitor stand. Display center is x=248, so the stand is centered there. -->
+  <path d="M216 416
+           H280
+           V456
+           H340
+           Q360 456 360 480
+           H136
+           Q136 456 156 456
+           H216
+           Z"
+        fill="#000000"
+        stroke="#000000"
+        stroke-width="16"
+        stroke-linejoin="round"/>
+
+  <!-- Upper-right folder: thinner outline. -->
+  <path d="M286 30
+           H348
+           Q360 30 368 40
+           L398 70
+           H468
+           Q492 70 492 94
+           V206
+           Q492 230 468 230
+           H286
+           Q262 230 262 206
+           V54
+           Q262 30 286 30
+           Z"
+        fill="none"
+        stroke="#000000"
+        stroke-width="24"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+</svg>

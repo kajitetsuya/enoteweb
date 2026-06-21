@@ -1,0 +1,53 @@
+{
+  "name": "enoteweb",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:shuffle": "vitest run --sequence.shuffle",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "test:e2e": "npm run build && playwright test",
+    "test:e2e:subpath": "npm run build && playwright test offline.spec.ts update.spec.ts",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@codemirror/commands": "6.10.3",
+    "@codemirror/lang-markdown": "6.5.0",
+    "@codemirror/state": "6.6.0",
+    "@codemirror/view": "6.43.0",
+    "@lezer/markdown": "1.6.4",
+    "codemirror": "6.0.2",
+    "dompurify": "3.4.11",
+    "libsodium-wrappers-sumo": "0.8.4",
+    "marked": "18.0.4",
+    "node-diff3": "3.2.1",
+    "qr": "0.6.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.60.0",
+    "@testing-library/react": "16.3.2",
+    "@types/node": "24.12.4",
+    "@types/react": "19.2.15",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "@vitest/coverage-v8": "4.1.7",
+    "eslint": "10.4.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.2",
+    "fake-indexeddb": "6.2.5",
+    "globals": "17.6.0",
+    "jsdom": "29.1.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.60.0",
+    "vite": "8.0.16",
+    "vitest": "4.1.7"
+  }
+}

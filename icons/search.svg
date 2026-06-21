@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Search icon">
+  <g transform="translate(256 256) scale(1.1933) translate(-268.469 -268.469)">
+    <circle cx="218" cy="218" r="116"
+            fill="none" stroke="#000000" stroke-width="34"/>
+    <path d="M302 302 L356 356"
+          fill="none" stroke="#000000" stroke-width="34"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M350 350 L426 426"
+          fill="none" stroke="#000000" stroke-width="52"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

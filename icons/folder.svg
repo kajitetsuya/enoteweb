@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Folder outline icon">
+  <path d="M116 168
+           Q116 152 132 152
+           H220
+           Q232 152 242 162
+           L292 208
+           H396
+           Q412 208 412 224
+           V386
+           Q412 402 396 402
+           H132
+           Q116 402 116 386
+           Z"
+        fill="none"
+        stroke="#000000"
+        stroke-width="24"
+        stroke-linejoin="round"
+        stroke-linecap="round"/>
+
+  <!-- Added horizontal line moved lower: y=264. -->
+  <path d="M116 264 H412"
+        fill="none"
+        stroke="#000000"
+        stroke-width="24"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+</svg>

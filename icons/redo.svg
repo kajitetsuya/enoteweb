@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="Redo icon">
+  <g transform="translate(256 256) scale(1.5) translate(-256 -245.508)">
+    <path d="M211 346
+             C163 346 133 318 133 276
+             C133 234 165 206 215 206
+             H377"
+          fill="none" stroke="#000000" stroke-width="42"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M377 206 L319 148 M377 206 L319 264"
+          fill="none" stroke="#000000" stroke-width="48"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,3872 @@
+.app-shell {
+  position: relative;
+  /* The document is locked (index.css); the home scrolls inside its own shell so
+     tall content (long recents, large fonts) still reaches the user without the
+     page itself scrolling/bouncing. `safe center` centers a short card but falls
+     back to top-aligned when the content is taller than the viewport. */
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  align-items: safe center;
+  justify-content: center;
+  padding: calc(32px + var(--safe-top)) calc(32px + var(--safe-right))
+    calc(32px + var(--safe-bottom)) calc(32px + var(--safe-left));
+}
+
+/* Scoped under .app-shell to outrank .compact-button / .secondary-button
+   (declared later in this file) so the home Settings button matches the
+   editor toolbar's icon button exactly: 34x32, no padding, 24px icon. */
+.app-shell .home-settings-button {
+  align-self: center;
+  width: 34px;
+  min-width: 34px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+}
+
+.home-settings-button .toolbar-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Title + passive "Update available" badge, stacked with the badge left-aligned
+   under the wordmark. */
+.brand-title {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.brand-title h1 {
+  margin: 0;
+}
+
+/* Right-side container for the Settings button, pushed to the right edge of the
+   brand row. */
+.brand-settings {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.update-badge {
+  padding: 3px 8px;
+  border: 1px solid #b45309;
+  border-radius: 999px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Version line + Check for updates, set apart from the settings controls. */
+.settings-about {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.settings-version {
+  margin: 0;
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.build-version {
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
+  word-break: break-all;
+}
+
+.update-dialog p {
+  margin: 0 0 4px;
+  color: #374151;
+}
+
+.auth-panel {
+  width: min(100%, 560px);
+  padding: 32px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgb(15 23 42 / 0.08);
+}
+
+
+.dropbox-panel {
+  width: min(100%, 620px);
+}
+
+.brand-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.brand-mark {
+  display: grid;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 8px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.brand-icon {
+  display: block;
+  width: 32px;
+  height: 32px;
+  background-color: currentColor;
+  mask: var(--icon-url) center / contain no-repeat;
+  -webkit-mask: var(--icon-url) center / contain no-repeat;
+}
+
+h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 34px;
+  font-weight: 720;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.auth-panel p:not(.draft-persistence-status) {
+  margin: 6px 0 0;
+  color: #4b5563;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* The relocated unlock/status message — and the dialogs that overlay the home —
+   live inside .auth-panel, so the `.auth-panel p` colour above (and its
+   dark-theme overrides) would otherwise beat .message-error/.message-info and
+   .dialog-error. Keep them tone-coloured while still inheriting the paragraph
+   spacing/size. The dark/system overrides exclude these classes via :not(). */
+.auth-panel p.message-error,
+.auth-panel p.dialog-error {
+  color: #b91c1c;
+}
+
+.auth-panel p.message-info {
+  color: #047857;
+}
+
+/* The .password-form rules are gone with the last home password form:
+   every password is collected in a dialog (SPEC §10/§17). */
+
+.save-as-dialog label,
+.settings-dialog label {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.save-as-dialog input,
+.search-panel input,
+.settings-dialog input,
+.settings-dialog select {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  color: #111827;
+  background: #ffffff;
+  font-size: 16px;
+}
+
+.save-as-dialog input:focus,
+.search-panel input:focus,
+.settings-dialog input:focus,
+.settings-dialog select:focus {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.file-action,
+.primary-button,
+.secondary-button {
+  height: 40px;
+  border: 1px solid #111827;
+  border-radius: 6px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.file-action,
+.secondary-button {
+  min-width: 76px;
+  background: #ffffff;
+  color: #111827;
+}
+
+/* All hover feedback is gated on (hover: hover): iOS applies :hover styles on
+   tap and they STICK until focus moves elsewhere, leaving buttons looking
+   pressed/inverted after use. Touch devices get state
+   styling (.is-active, :disabled) only. */
+@media (hover: hover) {
+  .file-action:hover,
+  .primary-button:hover,
+  .secondary-button:hover {
+    border-color: #374151;
+    background: #374151;
+    color: #ffffff;
+  }
+}
+
+.primary-button:disabled,
+.primary-button:disabled:hover,
+.secondary-button:disabled,
+.secondary-button:disabled:hover {
+  border-color: #d1d5db;
+  background: #ffffff;
+  color: #9ca3af;
+  cursor: default;
+}
+
+.draft-actions {
+  /* Flex-wrap (not fixed grid columns) so the row reflows to a second line on
+     narrow phones instead of overflowing the panel near 320px — the buttons keep
+     their width and wrap rather than shrink. */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  gap: 10px 8px;
+  margin-top: 18px;
+}
+
+.draft-actions button {
+  flex: 0 0 auto;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #111827;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.draft-action-primary {
+  /* One slot shared by the `New draft` / `Edit draft` labels (the element swaps
+     text on hasDraft). Fixed to the content-fit width of the wider label so both
+     fit snugly and the row never reflows when the label changes. In Inter,
+     `New draft` (~83px incl. padding+border) is wider than `Edit draft`. */
+  width: 84px;
+}
+
+.draft-icon-button {
+  display: inline-grid;
+  width: 36px;
+  place-items: center;
+  padding: 0;
+}
+
+.draft-actions .draft-icon-button {
+  padding: 0;
+}
+
+.draft-icon-button .toolbar-icon {
+  width: 24px;
+  height: 24px;
+}
+
+@media (hover: hover) {
+  .draft-actions button:hover {
+    border-color: #374151;
+    background: #f3f4f6;
+    color: #111827;
+  }
+}
+
+.draft-actions button:disabled,
+.draft-actions button:disabled:hover {
+  border-color: #d1d5db;
+  background: #ffffff;
+  color: #9ca3af;
+  cursor: default;
+}
+
+.draft-persistence-status {
+  margin: 15px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid #d1d5db;
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.draft-actions button.is-muted,
+.draft-actions button.is-muted:hover {
+  border-color: #d1d5db;
+  background: #ffffff;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+
+.recent-files-context-menu {
+  position: fixed;
+  z-index: 20;
+  min-width: 148px;
+  padding: 4px;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgb(15 23 42 / 0.18);
+}
+
+.recent-files-context-menu button {
+  width: 100%;
+  height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #111827;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .recent-files-context-menu button:hover {
+    background: #f3f4f6;
+  }
+}
+
+.import-block {
+  margin-top: 18px;
+}
+
+.dropbox-status-card {
+  display: grid;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.dropbox-status-card p {
+  margin: 0;
+}
+
+.dropbox-path {
+  color: #111827;
+  font-family: Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+}
+
+.dropbox-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.file-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.message-error {
+  color: #b91c1c;
+}
+
+.message-info {
+  color: #047857;
+}
+
+/* In-dialog validation/error text (unlock failures, the Dropbox browser's
+   filename validation): red so it reads as an error, not neutral body copy. */
+.dialog-error {
+  margin: 0;
+  color: #b91c1c;
+}
+
+.form-message,
+.editor-message {
+  font-weight: 700;
+}
+
+/* A message/status line with a close (🗙) button pinned to its right edge.
+   Tone/weight come from the existing message classes; this only adds the row
+   layout and the close affordance, so colour is inherited via `currentColor`. */
+.dismissible-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.dismissible-banner-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dismissible-banner-close {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: -2px -2px -2px 0;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.65;
+}
+
+@media (hover: hover) {
+  .dismissible-banner-close:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.08);
+  }
+}
+
+.local-file-diagnostic {
+  max-height: 180px;
+  margin: 12px 0 0;
+  padding: 10px;
+  overflow: auto;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f9fafb;
+  color: #111827;
+  font-family: Consolas, 'Liberation Mono', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.editor-shell {
+  /* Track the live visual viewport so the shell always equals the visible area
+     (address bar show/hide). `100vh` is the oldest fallback, `100dvh` the modern
+     one; `--app-viewport-height` is set only when the optional VisualViewport
+     keyboard handler is active and otherwise resolves to `100dvh`. */
+  height: 100vh;
+  height: 100dvh;
+  height: var(--app-viewport-height, 100dvh);
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "toolbar"
+    "search"
+    "messages"
+    "sync"
+    "editor"
+    "statusbar";
+  overflow: hidden;
+  /* Light chrome sits very slightly gray so the white editor surface reads
+     as the working area, mirroring the dark-mode depth. */
+  background: #f1f3f5;
+  /* Containing block for the search-panel overlay (its grid area is its
+     containing block when absolutely positioned). */
+  position: relative;
+  /* iOS keyboard: when the visual viewport pans (offsetTop > 0) and the
+     scroll pin cannot undo it, shift the shell down to track the visible
+     region — otherwise the bottom strip (and the caret) hides behind the
+     keyboard. 0px whenever the pin works or the keyboard is closed. */
+  transform: translateY(var(--app-viewport-offset-top, 0px));
+}
+
+/* Two rows on narrow screens — (Home, status)
+   left and (Read-only, Settings) right on row 1, every other control on
+   row 2 — merging into a single row from 641px up, the same breakpoint
+   where the search panel and preview switch layouts. */
+.editor-toolbar {
+  grid-area: toolbar;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'status corner'
+    'actions actions';
+  align-items: center;
+  gap: 9px 12px;
+  /* Icon-button palette lives on the toolbar root (not .toolbar-actions) so
+     the Home button inside .toolbar-status shares it. */
+  --toolbar-icon-bg: #ffffff;
+  --toolbar-icon-fg: #111827;
+  --toolbar-icon-hover-bg: #f3f4f6;
+  --toolbar-icon-hover-border: #9ca3af;
+  --toolbar-icon-active-bg: #111827;
+  --toolbar-icon-active-fg: #ffffff;
+  --toolbar-icon-disabled-bg: #ffffff;
+  --toolbar-icon-disabled-border: #d1d5db;
+  --toolbar-icon-disabled-fg: #9ca3af;
+  /* Top + side safe-area insets: the toolbar background extends under the
+     status bar / notch while the buttons stay clear of it. */
+  padding: calc(14px + var(--safe-top)) calc(16px + var(--safe-right)) 14px
+    calc(16px + var(--safe-left));
+  border-bottom: 1px solid #d1d5db;
+  background: #f1f3f5;
+}
+
+@media (min-width: 641px) {
+  .editor-toolbar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: 'status actions corner';
+  }
+}
+
+.toolbar-status {
+  grid-area: status;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.toolbar-corner {
+  grid-area: corner;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The corner pair reads as mode controls on the one-row layout; no divider
+   is needed on the two-row layout, where the corner stands alone. */
+.toolbar-corner-separator {
+  display: none;
+}
+
+@media (min-width: 641px) {
+  .toolbar-corner-separator {
+    display: inline-block;
+  }
+}
+
+.toolbar-status-text {
+  min-width: 0;
+}
+
+/* Belt: the status line's vocabulary is short and fixed, but it must never
+   wrap the row — trim like the filename when space runs out. */
+.toolbar-status-text .save-status {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toolbar-file-name {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toolbar-actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow-x: auto;
+  padding-bottom: 1px;
+}
+
+.save-status {
+  margin: 0;
+  color: #4b5563;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.storage-inline-status {
+  margin: 2px 0 0;
+  color: #047857;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.storage-inline-status-pending-sync,
+.storage-inline-status-offline {
+  color: #92400e;
+}
+
+.storage-inline-status-conflict,
+.storage-inline-status-error {
+  color: #b91c1c;
+}
+
+.save-status-dirty,
+.save-status-saving {
+  color: #92400e;
+}
+
+.save-status-error {
+  color: #b91c1c;
+}
+
+.compact-button {
+  min-width: auto;
+  height: 32px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+
+.toolbar-icon-button {
+  display: inline-grid;
+  width: 34px;
+  min-width: 34px;
+  place-items: center;
+  padding: 0;
+  background: var(--toolbar-icon-bg);
+  color: var(--toolbar-icon-fg);
+}
+
+.toolbar-text-button {
+  min-width: 48px;
+}
+
+.toolbar-icon {
+  width: 24px;
+  height: 24px;
+  display: block;
+  background-color: currentColor;
+  mask: var(--icon-url) center / contain no-repeat;
+  -webkit-mask: var(--icon-url) center / contain no-repeat;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 26px;
+  margin: 0 3px;
+  flex: 0 0 auto;
+  background: #d1d5db;
+}
+
+@media (hover: hover) {
+  .toolbar-icon-button:hover {
+    border-color: var(--toolbar-icon-hover-border);
+    background: var(--toolbar-icon-hover-bg);
+    color: var(--toolbar-icon-fg);
+  }
+}
+
+.toolbar-icon-button:disabled,
+.toolbar-icon-button:disabled:hover,
+.search-icon-button:disabled,
+.search-icon-button:disabled:hover,
+.search-text-button:disabled,
+.search-text-button:disabled:hover {
+  border-color: var(--toolbar-icon-disabled-border);
+  background: var(--toolbar-icon-disabled-bg);
+  color: var(--toolbar-icon-disabled-fg);
+  cursor: default;
+}
+
+/* Muted-but-tappable toolbar action (aria-disabled, not disabled): looks
+   unavailable but stays tappable so it can explain why on tap — mobile has no
+   hover tooltip. */
+.toolbar-icon-button.is-muted,
+.toolbar-icon-button.is-muted:hover {
+  border-color: var(--toolbar-icon-disabled-border);
+  background: var(--toolbar-icon-disabled-bg);
+  color: var(--toolbar-icon-disabled-fg);
+}
+
+.search-panel {
+  /* The panel OVERLAYS the top of the editor area instead of occupying its
+     own grid row, so opening it does not shift the text down: an
+     absolutely-positioned grid item is placed relative to its
+     grid area, and the shell is its containing block. The "search" template
+     row stays defined but collapses to zero. */
+  grid-area: editor;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  --toolbar-icon-bg: #ffffff;
+  --toolbar-icon-fg: #111827;
+  --toolbar-icon-hover-bg: #f3f4f6;
+  --toolbar-icon-hover-border: #9ca3af;
+  --toolbar-icon-active-bg: #111827;
+  --toolbar-icon-active-fg: #ffffff;
+  --toolbar-icon-disabled-bg: #ffffff;
+  --toolbar-icon-disabled-border: #d1d5db;
+  --toolbar-icon-disabled-fg: #9ca3af;
+  /* Divider between the find and replace halves; drawn in the side-by-side
+     layout and removed when the panel restacks below 640px. Matches the panel's
+     own border in each theme. */
+  --search-separator: #d1d5db;
+  display: grid;
+  /* Default to two roughly-equal halves (find left, replace right) on one line,
+     mirroring the Markdown preview's side-by-side split. minmax(0, 1fr) caps each
+     half so a button-heavy side can't exceed 50%; the 8px gap is the gutter. The
+     panel restacks to one column under @media (max-width: 640px) — the same
+     breakpoint at which the preview swaps to overlay, so the two switch together. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px calc(16px + var(--safe-right)) 8px calc(16px + var(--safe-left));
+  border-bottom: 1px solid #d1d5db;
+  background: #f1f3f5;
+  animation: search-panel-slide 140ms ease-out;
+  transform-origin: top;
+}
+
+.search-panel-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Each row is a grid item in the side-by-side layout; min-width: 0 overrides the
+   default content-based minimum so the inner input shrinks within its half instead
+   of overflowing. (Reset is unnecessary when stacked — a single column already
+   gives each row the full width.) */
+.find-panel-row,
+.replace-panel-row {
+  min-width: 0;
+}
+
+/* Vertical divider between the two halves. The border sits at the start of the
+   replace column; the 8px padding plus the panel's 8px column gap give it symmetric
+   breathing room so it reads as centred in the gutter. Removed when the panel
+   restacks below 640px (see @media max-width: 640px). */
+.replace-panel-row {
+  border-left: 1px solid var(--search-separator);
+  padding-left: 8px;
+}
+
+/* The custom clear (✕) below replaces the native WebKit/Blink one so every
+   browser renders the same control (a borderless glyph,
+   visible only while the box has text). */
+.search-panel input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  display: none;
+}
+
+.search-input-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.search-input-wrap input {
+  padding-right: 34px;
+}
+
+.search-clear-button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .search-clear-button:hover {
+    background: rgba(0, 0, 0, 0.08);
+  }
+}
+
+.search-panel input {
+  height: 34px;
+  /* Keep at 16px (never smaller): iOS Safari auto-zooms the page when a focused
+     text field is under 16px. The shared input rule is already 16px; this block
+     must not lower it. */
+  font-size: 16px;
+}
+
+.search-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.search-icon-button {
+  display: inline-grid;
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.search-text-button {
+  height: 34px;
+  min-width: auto;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+@keyframes search-panel-slide {
+  from {
+    opacity: 0;
+    transform: scaleY(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+.editor-messages {
+  grid-area: messages;
+  display: grid;
+}
+
+.editor-message {
+  margin: 0;
+  /* Side safe-area insets on the banner itself (not the grid parent) so the
+     full-bleed tone background keeps reaching the edges while text stays clear. */
+  padding: 10px calc(16px + var(--safe-right)) 10px calc(16px + var(--safe-left));
+  font-size: 13px;
+}
+
+.editor-message.message-error {
+  border-bottom: 1px solid #fecaca;
+  background: #fef2f2;
+}
+
+.editor-message.message-info {
+  border-bottom: 1px solid #bbf7d0;
+  background: #f0fdf4;
+}
+
+/* One-shot preview position-sync row. Sits directly above the editor/preview
+   split and mirrors its 50/50 layout and side safe-area insets so the two
+   buttons center over their panes. The center slot reserves space over the pane
+   divider for the future continuous-sync toggle. */
+.preview-sync-bar {
+  grid-area: sync;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 4px var(--safe-right) 4px var(--safe-left);
+  border-bottom: 1px solid #d1d5db;
+  background: #f1f3f5;
+}
+
+.preview-sync-half {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.preview-sync-center {
+  flex: 0 0 1px;
+}
+
+.preview-sync-bar .compact-button {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-region {
+  grid-area: editor;
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  /* The editor surface fills under a side notch; the side safe-area padding
+     insets the gutter/text/preview while the matching background keeps the
+     strip seamless. CodeMirror internals are deliberately left untouched. */
+  background: #ffffff;
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+}
+
+.editor-region.is-soft-locked {
+  padding: 0;
+  background: #020617;
+}
+
+.editor-soft-lock-blackout {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  background: #020617;
+}
+
+.editor-host {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.markdown-preview {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  /* Backstop: the preview is the other intentional inner scroller; keep its
+     scroll from chaining out to the page. */
+  overscroll-behavior: contain;
+  padding: 16px 22px;
+  border-left: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  /* font-family / font-size come from MarkdownPreview's inline style so the
+     preview tracks the editor Font and Font size settings (16px is a fallback). */
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* On narrow screens the toggle swaps the editor for the preview rather than
+   splitting, so each gets the full width. */
+@media (max-width: 640px) {
+  .editor-region.is-split .editor-host {
+    display: none;
+  }
+
+  .editor-region.is-split .markdown-preview {
+    border-left: none;
+  }
+
+  /* The preview is an overlay (not side by side) here, so per-pane alignment has
+     no meaning — hide the sync row. */
+  .preview-sync-bar {
+    display: none;
+  }
+}
+
+.markdown-preview > :first-child {
+  margin-top: 0;
+}
+
+.markdown-preview > :last-child {
+  margin-bottom: 0;
+}
+
+/* Scroll-past-end, mirroring the editor's scrollPastEnd(): an empty spacer
+   one-line short of the pane height lets the last block scroll to the top.
+   Also makes "Jump to Markdown" exact for blocks near the document end. */
+.markdown-preview::after {
+  content: '';
+  display: block;
+  height: calc(100% - 2.5rem);
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+  margin: 1.2em 0 0.5em;
+  line-height: 1.25;
+}
+
+.markdown-preview h1 {
+  font-size: 1.6em;
+}
+
+.markdown-preview h2 {
+  font-size: 1.4em;
+}
+
+.markdown-preview h3 {
+  font-size: 1.2em;
+}
+
+.markdown-preview p,
+.markdown-preview ul,
+.markdown-preview ol,
+.markdown-preview blockquote,
+.markdown-preview pre,
+.markdown-preview table {
+  margin: 0 0 0.85em;
+}
+
+.markdown-preview ul,
+.markdown-preview ol {
+  padding-left: 1.6em;
+}
+
+.markdown-preview blockquote {
+  margin-left: 0;
+  padding: 0.2em 0 0.2em 0.9em;
+  border-left: 3px solid #cbd5e1;
+  color: #475569;
+}
+
+.markdown-preview code {
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+  background: #f1f5f9;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
+
+.markdown-preview pre {
+  padding: 0.8em 1em;
+  border-radius: 6px;
+  background: #f1f5f9;
+  overflow: auto;
+}
+
+.markdown-preview pre code {
+  padding: 0;
+  background: none;
+}
+
+.markdown-preview a {
+  color: #2563eb;
+}
+
+.markdown-preview img {
+  max-width: 100%;
+  height: auto;
+}
+
+.markdown-preview table {
+  border-collapse: collapse;
+}
+
+.markdown-preview th,
+.markdown-preview td {
+  padding: 0.35em 0.6em;
+  border: 1px solid #cbd5e1;
+}
+
+.markdown-preview hr {
+  border: none;
+  border-top: 1px solid #cbd5e1;
+  margin: 1.2em 0;
+}
+
+.editor-statusbar {
+  grid-area: statusbar;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 6px calc(16px + var(--safe-right)) 6px calc(16px + var(--safe-left));
+  border-top: 1px solid #d1d5db;
+  background: #f1f3f5;
+  color: #4b5563;
+  font-size: 12px;
+  line-height: 1.4;
+  padding-bottom: max(6px, var(--safe-bottom));
+}
+
+.statusbar-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.statusbar-item {
+  white-space: nowrap;
+}
+
+.statusbar-meta {
+  /* Keep the mode/storage group hugging the right edge even when the status
+     bar wraps to two lines in portrait and this group has a line to itself. */
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+/* The search match summary ("3 of 3") lives in the status bar in the same green
+   as the info messages elsewhere; dark/system overrides follow the theme blocks. */
+.statusbar-search .statusbar-item {
+  color: #047857;
+  font-weight: 600;
+}
+
+/* Keyboard-driven chrome retraction: `is-typing-in-editor`
+   is set only while the on-screen keyboard is up AND focus is in the editor
+   itself — focus in the find/replace boxes retracts nothing, so the toolbar
+   stays reachable and the "x of X" summary stays visible. While typing in
+   the editor the status bar yields its line in every orientation; on short
+   screens (landscape phones, where the keyboard leaves ~140px) the toolbar
+   retracts too. Desktops never set the class (no on-screen keyboard). */
+.editor-shell.is-typing-in-editor .editor-statusbar {
+  display: none;
+}
+
+@media (max-height: 500px) {
+  .editor-shell.is-typing-in-editor .editor-toolbar {
+    display: none;
+  }
+}
+
+/* The unfocused caret (custom layer in CodeMirrorEditor): keeps the insertion
+   point visible while focus is elsewhere — keyboard down before tapping
+   Insert Random String, or while typing a search query. Wider and muted so
+   it reads as "parked here", not as a focused editor. */
+.editor-host .cm-unfocused-caret {
+  position: absolute;
+  border-left: 2px solid #6b7280;
+  margin-left: -1px;
+  pointer-events: none;
+}
+
+/* Blink in step with CodeMirror's own caret (1.2s, hard on/off) — animated on
+   the layer container, exactly how CM blinks its cursor layer. */
+.editor-host .cm-unfocusedCaretLayer {
+  animation: steps(1) enote-unfocused-caret-blink 1.2s infinite;
+}
+
+@keyframes enote-unfocused-caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.editor-host .cm-editor {
+  height: 100%;
+  min-height: 0;
+  background: #ffffff;
+  color: #111827;
+  font-size: var(--editor-font-size, 16px);
+}
+
+.editor-host .cm-content {
+  padding: 18px 16px 56px;
+  font-family: var(
+    --editor-font-family,
+    ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    'Liberation Mono',
+    monospace
+  );
+  line-height: 1.6;
+}
+
+.editor-host .cm-focused {
+  outline: none;
+}
+
+.editor-host .cm-scroller {
+  font-family: inherit;
+  overflow: auto;
+  /* Backstop: keep scroll/rubber-band from chaining out to the page. */
+  overscroll-behavior: contain;
+}
+
+.editor-host .cm-search-match,
+.editor-host .cm-selectionMatch {
+  border-radius: 3px;
+}
+
+.editor-host .cm-search-match {
+  background: #fef08a;
+}
+
+.editor-host .cm-search-match-selected,
+.editor-host .cm-selectionMatch,
+.editor-host .cm-selectionMatch-main {
+  background: transparent;
+}
+
+/* Line numbers are clickable: a click copies that line's last word to the
+   clipboard (Section 11). Show a pointer and a hover tint so the affordance is
+   discoverable. Theme-neutral base; dark/system hover tints follow below. */
+.editor-host .cm-lineNumbers .cm-gutterElement {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .editor-host .cm-lineNumbers .cm-gutterElement:hover {
+    background: rgba(0, 0, 0, 0.08);
+  }
+}
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  /* Safe-area padding keeps centered dialogs clear of the notch/home indicator
+     once viewport-fit=cover lets the backdrop fill the whole display. */
+  padding: calc(20px + var(--safe-top)) calc(20px + var(--safe-right))
+    calc(20px + var(--safe-bottom)) calc(20px + var(--safe-left));
+  background: rgb(17 24 39 / 0.45);
+}
+
+.save-as-dialog,
+.settings-dialog {
+  display: grid;
+  width: min(100%, 360px);
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgb(15 23 42 / 0.22);
+}
+
+.save-as-dialog h2,
+.settings-dialog h2 {
+  margin: 0 0 4px;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.settings-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.settings-title-row h2 {
+  margin: 0;
+}
+
+.settings-help-button {
+  flex: 0 0 auto;
+}
+
+.settings-dialog {
+  width: min(100%, 520px);
+  max-height: min(720px, calc(100svh - 40px - var(--safe-top) - var(--safe-bottom)));
+  overflow: auto;
+}
+
+/* Settings dialogs pin actions in an always-visible footer: the
+   options scroll inside .settings-scroll; the heading and the actions row
+   never move. Other dialogs using .settings-dialog keep the plain layout. */
+.settings-dialog.has-pinned-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.settings-scroll {
+  display: grid;
+  gap: 10px;
+  overflow-y: auto;
+  min-height: 0;
+  /* Room for focus outlines at the scroll edges. */
+  padding: 2px;
+  margin: -2px;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.help-dialog {
+  width: min(100%, 680px);
+}
+
+.help-scroll {
+  gap: 0;
+}
+
+.help-content {
+  display: grid;
+  gap: 10px;
+  color: #111827;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.help-content h2,
+.help-content h3 {
+  margin: 8px 0 0;
+  color: #111827;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.help-content h2 {
+  font-size: 1.1rem;
+}
+
+.help-content h2:first-child {
+  margin-top: 0;
+}
+
+.help-content h3 {
+  font-size: 1rem;
+}
+
+.help-content p,
+.help-content ul {
+  margin: 0;
+}
+
+.help-content ul {
+  padding-left: 1.25rem;
+}
+
+.help-content li + li {
+  margin-top: 4px;
+}
+
+.help-content a {
+  color: #1d4ed8;
+  overflow-wrap: anywhere;
+}
+
+.help-content code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.help-dialog-actions {
+  justify-content: space-between;
+}
+
+.help-back-button {
+  margin-right: auto;
+}
+
+.settings-field {
+  display: grid;
+  gap: 6px;
+}
+
+.settings-grid > .settings-field,
+.settings-advanced > .settings-field {
+  grid-template-columns: minmax(128px, 34%) minmax(0, 1fr);
+  align-items: center;
+  column-gap: 12px;
+}
+
+/* The connected Dropbox account email, shown above the Unlink button in the
+   home settings dialog. Left-aligned start so the Unlink button beneath it
+   does not stretch to the row width. */
+.home-settings-dropbox-account {
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
+  align-items: start;
+  justify-items: start;
+}
+
+.settings-advanced {
+  display: grid;
+  gap: 10px;
+  padding: 12px 0 0;
+  border-top: 1px solid #d1d5db;
+}
+
+.settings-advanced summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  color: #111827;
+}
+
+.secret-key-setting {
+  margin-top: 8px;
+}
+
+.secret-key-setting > span:first-child {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.settings-inline-status {
+  color: #5b6470;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.secret-key-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  grid-column: 1 / -1;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+/* Secret-key Settings feedback, shown in the dialog below the action row (tone
+   color comes from .message-info / .message-error). */
+.secret-key-settings-message {
+  grid-column: 2 / -1;
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.secret-key-display,
+.secret-key-manual-text {
+  width: 100%;
+  resize: vertical;
+  font-family: var(
+    --editor-font-family,
+    ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    'Liberation Mono',
+    monospace
+  );
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.secret-key-display {
+  height: 55px;
+  min-height: 55px;
+  padding: 7px 10px;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  color: #111827;
+  background: #f9fafb;
+}
+
+.secret-key-manual-text {
+  min-height: 96px;
+}
+
+/* The Secret key QR. Fixed white field with a baked-in quiet zone, dark modules,
+   at a comfortable scanning size — never theme-inverted, so it scans in dark
+   mode too. The SVG carries its own white background; the border/padding give it
+   a card edge against the dialog. */
+.secret-key-qr {
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+  margin: 4px auto 2px;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.settings-account-email {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #5b6470;
+  overflow-wrap: anywhere;
+}
+
+.settings-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding-top: 4px;
+}
+
+.settings-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-checkbox input {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+}
+
+.dialog-message {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* The Dropbox browser's action row overflows on a long `Upload to /deep/folder`
+   label: scroll it horizontally instead of clipping the button text, the mirror
+   of the editor's scrollable toolbar but revealing its right (primary-action)
+   end first (the component scrolls it there). `margin-left: auto` on the first
+   button right-aligns the row while it still fits. */
+.dropbox-browser-actions {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.dropbox-browser-actions > :first-child {
+  margin-left: auto;
+}
+
+.app-shell.theme-dark,
+.app-shell.theme-system,
+.editor-shell.theme-dark,
+.editor-shell.theme-system {
+  /* High-contrast dark: neutral near-black surfaces, clearly visible
+     gray borders, near-white text, and a gutter a step lighter than the editor
+     surface. Vivid green/red status colours are set on the message classes. */
+  --dark-bg: #0d0d0d;
+  --dark-surface: #1a1a1a;
+  --dark-surface-hover: #2a2a2a;
+  --dark-border: #5c5c5c;
+  --dark-text: #f5f5f5;
+  --dark-muted: #a8a8a8;
+  /* The text-editing area sits a step darker than the chrome, with the gutter
+     strip between the two. */
+  --dark-editor-bg: #0a0a0a;
+  --dark-gutter-bg: #161616;
+  --dark-line-bg: rgb(255 255 255 / 0.08);
+  --dark-selection-bg: #2f6fd0;
+  --dark-search-match-bg: #6b5300;
+}
+
+.app-shell.theme-dark,
+.editor-shell.theme-dark {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+  color-scheme: dark;
+}
+
+.editor-shell.theme-dark .editor-toolbar,
+.editor-shell.theme-dark .search-panel,
+.editor-shell.theme-dark .preview-sync-bar,
+.editor-shell.theme-dark .save-as-dialog,
+.editor-shell.theme-dark .settings-dialog,
+.app-shell.theme-dark .settings-dialog {
+  border-color: var(--dark-border);
+  background: var(--dark-surface);
+  color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .editor-region,
+.editor-shell.theme-dark .editor-host .cm-editor {
+  border-color: var(--dark-border);
+  background: var(--dark-editor-bg);
+  color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .editor-statusbar {
+  border-top-color: var(--dark-border);
+  background: var(--dark-surface);
+  color: var(--dark-muted);
+}
+
+.editor-shell.theme-dark .markdown-preview {
+  border-left-color: var(--dark-border);
+  background: var(--dark-surface);
+  color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .markdown-preview code,
+.editor-shell.theme-dark .markdown-preview pre {
+  background: var(--dark-line-bg);
+}
+
+.editor-shell.theme-dark .markdown-preview blockquote {
+  border-left-color: var(--dark-muted);
+  color: var(--dark-muted);
+}
+
+.editor-shell.theme-dark .markdown-preview a {
+  color: #6ea8fe;
+}
+
+.editor-shell.theme-dark .markdown-preview th,
+.editor-shell.theme-dark .markdown-preview td,
+.editor-shell.theme-dark .markdown-preview hr {
+  border-color: var(--dark-border);
+}
+
+.app-shell.theme-dark .auth-panel {
+  border-color: var(--dark-border);
+  background: var(--dark-surface);
+  color: var(--dark-text);
+  box-shadow: none;
+}
+
+.app-shell.theme-dark h1,
+.app-shell.theme-dark .auth-panel p:not(.form-message):not(.dialog-error):not(.draft-persistence-status),
+.app-shell.theme-dark .import-block p {
+  color: var(--dark-text);
+}
+
+/* The base message red/green are tuned for light backgrounds; on the all-black
+   dark theme they read dim, so brighten them (home auth panel + editor). Only
+   the explicit dark theme darkens these surfaces, so scope it there. */
+.app-shell.theme-dark .message-error,
+.editor-shell.theme-dark .editor-message.message-error {
+  color: #ff6b6b;
+}
+
+.app-shell.theme-dark .dialog-error,
+.editor-shell.theme-dark .dialog-error {
+  color: #ff6b6b;
+}
+
+.app-shell.theme-dark .message-info,
+.editor-shell.theme-dark .editor-message.message-info {
+  color: #4ade80;
+}
+
+/* Editor message banners get a dark tinted surface in dark mode (the light
+   pink/green fills are for light backgrounds only, so they would otherwise show
+   as bright panels on the near-black editor). */
+.editor-shell.theme-dark .editor-message.message-error {
+  border-bottom-color: rgb(255 107 107 / 0.4);
+  background: rgb(255 107 107 / 0.12);
+}
+
+.editor-shell.theme-dark .editor-message.message-info {
+  border-bottom-color: rgb(74 222 128 / 0.4);
+  background: rgb(74 222 128 / 0.12);
+}
+
+@media (hover: hover) {
+  .app-shell.theme-dark .dismissible-banner-close:hover,
+  .editor-shell.theme-dark .dismissible-banner-close:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+}
+
+.editor-shell.theme-dark .statusbar-search .statusbar-item {
+  color: #34d399;
+}
+
+.app-shell.theme-dark .brand-mark {
+  border: 1px solid var(--dark-border);
+  background: var(--dark-surface);
+  color: var(--dark-text);
+  /* Invert the app icon in dark mode: the light-on-dark glyph
+     flips to dark-on-light so the frame/circle negative space reads white. */
+  filter: invert(1);
+}
+
+.app-shell.theme-dark .settings-about,
+.editor-shell.theme-dark .settings-about,
+.app-shell.theme-dark .settings-advanced,
+.editor-shell.theme-dark .settings-advanced {
+  border-top-color: var(--dark-border);
+}
+
+.app-shell.theme-dark .settings-version,
+.editor-shell.theme-dark .settings-version,
+.app-shell.theme-dark .settings-account-email,
+.editor-shell.theme-dark .settings-account-email,
+.app-shell.theme-dark .settings-inline-status,
+.editor-shell.theme-dark .settings-inline-status,
+.app-shell.theme-dark .update-dialog p {
+  color: var(--dark-muted);
+}
+
+.app-shell.theme-dark .settings-advanced summary,
+.editor-shell.theme-dark .settings-advanced summary {
+  color: var(--dark-text);
+}
+
+.app-shell.theme-dark .update-badge {
+  border-color: #b45309;
+  background: rgb(180 83 9 / 0.18);
+  color: #fcd34d;
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-shell.theme-system .settings-about,
+  .editor-shell.theme-system .settings-about {
+    border-top-color: var(--dark-border);
+  }
+
+  .app-shell.theme-system .settings-version,
+  .editor-shell.theme-system .settings-version,
+  .app-shell.theme-system .settings-account-email,
+  .editor-shell.theme-system .settings-account-email,
+  .app-shell.theme-system .update-dialog p {
+    color: var(--dark-muted);
+  }
+
+  .app-shell.theme-system .update-badge {
+    border-color: #b45309;
+    background: rgb(180 83 9 / 0.18);
+    color: #fcd34d;
+  }
+}
+
+
+.app-shell.theme-dark .primary-button,
+.app-shell.theme-dark .secondary-button,
+.app-shell.theme-dark .file-action {
+  border-color: var(--dark-border);
+  background: var(--dark-surface);
+  color: var(--dark-text);
+}
+
+@media (hover: hover) {
+  .app-shell.theme-dark .primary-button:hover,
+  .app-shell.theme-dark .secondary-button:hover,
+  .app-shell.theme-dark .file-action:hover {
+    background: var(--dark-surface-hover);
+  }
+}
+
+.app-shell.theme-dark .primary-button:disabled,
+.app-shell.theme-dark .primary-button:disabled:hover,
+.app-shell.theme-dark .secondary-button:disabled,
+.app-shell.theme-dark .secondary-button:disabled:hover {
+  border-color: var(--dark-muted);
+  background: var(--dark-surface);
+  color: var(--dark-muted);
+}
+
+/* Draft-action buttons hardcode white/dark in the base rule (so the home draft
+   row looks the same in every theme by default); restore dark mode here to match
+   the Browse/Open .secondary-button treatment above. */
+.app-shell.theme-dark .draft-actions button {
+  border-color: var(--dark-border);
+  background: var(--dark-surface);
+  color: var(--dark-text);
+}
+
+@media (hover: hover) {
+  .app-shell.theme-dark .draft-actions button:hover {
+    background: var(--dark-surface-hover);
+  }
+}
+
+.app-shell.theme-dark .draft-actions button:disabled,
+.app-shell.theme-dark .draft-actions button:disabled:hover,
+.app-shell.theme-dark .draft-actions button.is-muted,
+.app-shell.theme-dark .draft-actions button.is-muted:hover {
+  border-color: var(--dark-muted);
+  background: var(--dark-surface);
+  color: var(--dark-muted);
+}
+
+.app-shell.theme-dark .auth-panel .draft-persistence-status {
+  border-top-color: var(--dark-border);
+  color: var(--dark-muted);
+}
+
+
+.app-shell.theme-dark .recent-files-context-menu {
+  border-color: var(--dark-border);
+  background: var(--dark-surface);
+  box-shadow: none;
+}
+
+.app-shell.theme-dark .recent-files-context-menu button {
+  color: var(--dark-text);
+}
+
+@media (hover: hover) {
+  .app-shell.theme-dark .recent-files-context-menu button:hover {
+    background: var(--dark-surface-hover);
+  }
+}
+
+.app-shell.theme-dark .local-file-diagnostic {
+  border-color: var(--dark-border);
+  background: var(--dark-surface-hover);
+  color: var(--dark-text);
+}
+
+.app-shell.theme-dark .dropbox-status-card {
+  border-color: var(--dark-border);
+  background: var(--dark-surface);
+}
+
+.app-shell.theme-dark .dropbox-path,
+.app-shell.theme-dark .dropbox-status-card p {
+  color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .save-status,
+.editor-shell.theme-dark .save-as-dialog h2,
+.editor-shell.theme-dark .settings-dialog h2,
+.app-shell.theme-dark .settings-dialog h2,
+.editor-shell.theme-dark .help-content,
+.app-shell.theme-dark .help-content,
+.editor-shell.theme-dark .help-content h2,
+.app-shell.theme-dark .help-content h2,
+.editor-shell.theme-dark .help-content h3,
+.app-shell.theme-dark .help-content h3,
+.editor-shell.theme-dark .secret-key-setting > span:first-child,
+.app-shell.theme-dark .secret-key-setting > span:first-child,
+.editor-shell.theme-dark .save-as-dialog label,
+.editor-shell.theme-dark .settings-dialog label,
+.app-shell.theme-dark .settings-dialog label {
+  color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .help-content a,
+.app-shell.theme-dark .help-content a {
+  color: #93c5fd;
+}
+
+.editor-shell.theme-dark .help-content code,
+.app-shell.theme-dark .help-content code {
+  background: var(--dark-surface-hover);
+  color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .secondary-button,
+.editor-shell.theme-dark .primary-button,
+.editor-shell.theme-dark .settings-dialog input,
+.editor-shell.theme-dark .settings-dialog select,
+.editor-shell.theme-dark .settings-dialog textarea,
+.app-shell.theme-dark .settings-dialog input,
+.app-shell.theme-dark .settings-dialog select,
+.app-shell.theme-dark .settings-dialog textarea,
+.editor-shell.theme-dark .save-as-dialog input,
+.editor-shell.theme-dark .search-panel input {
+  border-color: var(--dark-border);
+  background: var(--dark-surface);
+  color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .search-clear-button {
+  color: #9ca3af;
+}
+
+@media (hover: hover) {
+  .editor-shell.theme-dark .search-clear-button:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+}
+
+.editor-shell.theme-dark .dialog-backdrop {
+  background: rgb(0 0 0 / 0.65);
+}
+
+@media (hover: hover) {
+  .editor-shell.theme-dark .primary-button:hover,
+  .editor-shell.theme-dark .secondary-button:hover {
+    background: var(--dark-surface-hover);
+  }
+}
+
+.editor-shell.theme-dark .editor-toolbar,
+.editor-shell.theme-dark .search-panel {
+  --search-separator: var(--dark-border);
+  --toolbar-icon-bg: var(--dark-surface);
+  --toolbar-icon-fg: var(--dark-text);
+  --toolbar-icon-hover-bg: var(--dark-surface-hover);
+  --toolbar-icon-hover-border: var(--dark-border);
+  --toolbar-icon-active-bg: var(--dark-text);
+  --toolbar-icon-active-fg: var(--dark-surface);
+  --toolbar-icon-disabled-bg: var(--dark-surface);
+  --toolbar-icon-disabled-border: var(--dark-muted);
+  --toolbar-icon-disabled-fg: var(--dark-muted);
+}
+
+.editor-shell.theme-dark .toolbar-separator {
+  background: var(--dark-border);
+}
+
+.editor-shell.theme-dark .editor-message {
+  border-bottom: 1px solid var(--dark-border);
+  background: var(--dark-surface);
+  color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .storage-inline-status {
+  color: var(--dark-text);
+}
+
+/* Preserve the status tones on the black dark theme — the generic .save-status /
+   .storage-inline-status rules above otherwise flatten every state to
+   --dark-text. Brightened so red/amber/green stay legible on black. */
+.editor-shell.theme-dark .save-status.save-status-dirty,
+.editor-shell.theme-dark .save-status.save-status-saving {
+  color: #fbbf24;
+}
+
+.editor-shell.theme-dark .save-status.save-status-error {
+  color: #f87171;
+}
+
+.editor-shell.theme-dark .storage-inline-status.storage-inline-status-ready {
+  color: #34d399;
+}
+
+.editor-shell.theme-dark .storage-inline-status.storage-inline-status-pending-sync,
+.editor-shell.theme-dark .storage-inline-status.storage-inline-status-offline {
+  color: #fbbf24;
+}
+
+.editor-shell.theme-dark .storage-inline-status.storage-inline-status-conflict,
+.editor-shell.theme-dark .storage-inline-status.storage-inline-status-error {
+  color: #f87171;
+}
+
+.editor-shell.theme-dark .editor-host .cm-gutters {
+  border-right: 1px solid var(--dark-border);
+  background: var(--dark-gutter-bg);
+  color: var(--dark-muted);
+}
+
+.editor-shell.theme-dark .editor-host .cm-lineNumbers .cm-gutterElement {
+  color: var(--dark-muted);
+}
+
+@media (hover: hover) {
+  .editor-shell.theme-dark .editor-host .cm-lineNumbers .cm-gutterElement:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.editor-shell.theme-dark .editor-host .cm-activeLine,
+.editor-shell.theme-dark .editor-host .cm-activeLineGutter {
+  background: var(--dark-line-bg);
+}
+
+.editor-shell.theme-dark .editor-host .cm-cursor {
+  border-left-color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .editor-host .cm-unfocused-caret {
+  border-left-color: var(--dark-muted);
+}
+
+.editor-shell.theme-dark .editor-host .cm-selectionBackground,
+.editor-shell.theme-dark .editor-host .cm-focused .cm-selectionBackground {
+  background: var(--dark-selection-bg) !important;
+}
+
+.editor-shell.theme-dark .editor-host .cm-content ::selection {
+  background: var(--dark-selection-bg);
+  color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .editor-host .cm-search-match {
+  background: var(--dark-search-match-bg);
+  color: var(--dark-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-shell.theme-system,
+  .editor-shell.theme-system {
+    background: var(--dark-bg);
+    color: var(--dark-text);
+    color-scheme: dark;
+  }
+
+  .editor-shell.theme-system .editor-toolbar,
+  .editor-shell.theme-system .search-panel,
+  .editor-shell.theme-system .preview-sync-bar,
+  .editor-shell.theme-system .save-as-dialog,
+  .editor-shell.theme-system .settings-dialog,
+  .app-shell.theme-system .settings-dialog {
+    border-color: var(--dark-border);
+    background: var(--dark-surface);
+    color: var(--dark-text);
+  }
+
+  .editor-shell.theme-system .editor-region,
+  .editor-shell.theme-system .editor-host .cm-editor {
+    border-color: var(--dark-border);
+    background: var(--dark-editor-bg);
+    color: var(--dark-text);
+  }
+
+  .editor-shell.theme-system .editor-statusbar {
+    border-top-color: var(--dark-border);
+    background: var(--dark-surface);
+    color: var(--dark-muted);
+  }
+
+  .editor-shell.theme-system .markdown-preview {
+    border-left-color: var(--dark-border);
+    background: var(--dark-surface);
+    color: var(--dark-text);
+  }
+
+  .editor-shell.theme-system .markdown-preview code,
+  .editor-shell.theme-system .markdown-preview pre {
+    background: var(--dark-line-bg);
+  }
+
+  .editor-shell.theme-system .markdown-preview blockquote {
+    border-left-color: var(--dark-muted);
+    color: var(--dark-muted);
+  }
+
+  .editor-shell.theme-system .markdown-preview a {
+    color: #6ea8fe;
+  }
+
+  .editor-shell.theme-system .markdown-preview th,
+  .editor-shell.theme-system .markdown-preview td,
+  .editor-shell.theme-system .markdown-preview hr {
+    border-color: var(--dark-border);
+  }
+
+  .app-shell.theme-system .auth-panel {
+    border-color: var(--dark-border);
+    background: var(--dark-surface);
+    color: var(--dark-text);
+    box-shadow: none;
+  }
+
+  .app-shell.theme-system h1,
+  .app-shell.theme-system .auth-panel p:not(.form-message):not(.dialog-error):not(.draft-persistence-status),
+  .app-shell.theme-system .import-block p {
+    color: var(--dark-text);
+  }
+
+  .app-shell.theme-system .message-error,
+  .editor-shell.theme-system .editor-message.message-error {
+    color: #f87171;
+  }
+
+  .app-shell.theme-system .dialog-error,
+  .editor-shell.theme-system .dialog-error {
+    color: #f87171;
+  }
+
+  .app-shell.theme-system .message-info,
+  .editor-shell.theme-system .editor-message.message-info {
+    color: #34d399;
+  }
+
+  @media (hover: hover) {
+    .app-shell.theme-system .dismissible-banner-close:hover,
+    .editor-shell.theme-system .dismissible-banner-close:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+  }
+
+  .editor-shell.theme-system .statusbar-search .statusbar-item {
+    color: #34d399;
+  }
+
+  .app-shell.theme-system .brand-mark {
+    border: 1px solid var(--dark-border);
+    background: var(--dark-surface);
+    color: var(--dark-text);
+    filter: invert(1);
+  }
+
+
+  .app-shell.theme-system .primary-button,
+  .app-shell.theme-system .secondary-button,
+  .app-shell.theme-system .file-action {
+    border-color: var(--dark-border);
+    background: var(--dark-surface);
+    color: var(--dark-text);
+  }
+
+  @media (hover: hover) {
+    .app-shell.theme-system .primary-button:hover,
+    .app-shell.theme-system .secondary-button:hover,
+    .app-shell.theme-system .file-action:hover {
+      background: var(--dark-surface-hover);
+    }
+  }
+
+  .app-shell.theme-system .primary-button:disabled,
+  .app-shell.theme-system .primary-button:disabled:hover,
+  .app-shell.theme-system .secondary-button:disabled,
+  .app-shell.theme-system .secondary-button:disabled:hover {
+    border-color: var(--dark-muted);
+    background: var(--dark-surface);
+    color: var(--dark-muted);
+  }
+
+  .app-shell.theme-system .draft-actions button {
+    border-color: var(--dark-border);
+    background: var(--dark-surface);
+    color: var(--dark-text);
+  }
+
+  @media (hover: hover) {
+    .app-shell.theme-system .draft-actions button:hover {
+      background: var(--dark-surface-hover);
+    }
+  }
+
+  .app-shell.theme-system .draft-actions button:disabled,
+  .app-shell.theme-system .draft-actions button:disabled:hover,
+  .app-shell.theme-system .draft-actions button.is-muted,
+  .app-shell.theme-system .draft-actions button.is-muted:hover {
+    border-color: var(--dark-muted);
+    background: var(--dark-surface);
+    color: var(--dark-muted);
+  }
+
+  .app-shell.theme-system .auth-panel .draft-persistence-status {
+    border-top-color: var(--dark-border);
+    color: var(--dark-muted);
+  }
+
+
+  .app-shell.theme-system .recent-files-context-menu {
+    border-color: var(--dark-border);
+    background: var(--dark-surface);
+    box-shadow: none;
+  }
+
+  .app-shell.theme-system .recent-files-context-menu button {
+    color: var(--dark-text);
+  }
+
+  @media (hover: hover) {
+    .app-shell.theme-system .recent-files-context-menu button:hover {
+      background: var(--dark-surface-hover);
+    }
+  }
+
+  .app-shell.theme-system .local-file-diagnostic {
+    border-color: var(--dark-border);
+    background: var(--dark-surface-hover);
+    color: var(--dark-text);
+  }
+
+  .app-shell.theme-system .dropbox-status-card {
+    border-color: var(--dark-border);
+    background: var(--dark-surface);
+  }
+
+  .app-shell.theme-system .dropbox-path,
+  .app-shell.theme-system .dropbox-status-card p {
+    color: var(--dark-text);
+  }
+
+  .editor-shell.theme-system .save-status,
+  .editor-shell.theme-system .save-as-dialog h2,
+  .editor-shell.theme-system .settings-dialog h2,
+  .app-shell.theme-system .settings-dialog h2,
+  .editor-shell.theme-system .help-content,
+  .app-shell.theme-system .help-content,
+  .editor-shell.theme-system .help-content h2,
+  .app-shell.theme-system .help-content h2,
+  .editor-shell.theme-system .help-content h3,
+  .app-shell.theme-system .help-content h3,
+  .editor-shell.theme-system .settings-advanced summary,
+  .app-shell.theme-system .settings-advanced summary,
+  .editor-shell.theme-system .secret-key-setting > span:first-child,
+  .app-shell.theme-system .secret-key-setting > span:first-child,
+  .editor-shell.theme-system .save-as-dialog label,
+  .editor-shell.theme-system .settings-dialog label,
+  .app-shell.theme-system .settings-dialog label {
+    color: var(--dark-text);
+  }
+
+  .editor-shell.theme-system .help-content a,
+  .app-shell.theme-system .help-content a {
+    color: #93c5fd;
+  }
+
+  .editor-shell.theme-system .help-content code,
+  .app-shell.theme-system .help-content code {
+    background: var(--dark-surface-hover);
+    color: var(--dark-text);
+  }
+
+  .app-shell.theme-system .settings-advanced,
+  .editor-shell.theme-system .settings-advanced {
+    border-top-color: var(--dark-border);
+  }
+
+  .app-shell.theme-system .settings-inline-status,
+  .editor-shell.theme-system .settings-inline-status {
+    color: var(--dark-muted);
+  }
+
+  .editor-shell.theme-system .secondary-button,
+  .editor-shell.theme-system .primary-button,
+  .editor-shell.theme-system .settings-dialog input,
+  .editor-shell.theme-system .settings-dialog select,
+  .editor-shell.theme-system .settings-dialog textarea,
+  .app-shell.theme-system .settings-dialog input,
+  .app-shell.theme-system .settings-dialog select,
+  .app-shell.theme-system .settings-dialog textarea,
+  .editor-shell.theme-system .save-as-dialog input,
+  .editor-shell.theme-system .search-panel input {
+    border-color: var(--dark-border);
+    background: var(--dark-surface);
+    color: var(--dark-text);
+  }
+
+  .editor-shell.theme-system .search-clear-button {
+    color: #9ca3af;
+  }
+
+  @media (hover: hover) {
+    .editor-shell.theme-system .search-clear-button:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+  }
+
+  .editor-shell.theme-system .dialog-backdrop {
+    background: rgb(0 0 0 / 0.65);
+  }
+
+  @media (hover: hover) {
+    .editor-shell.theme-system .primary-button:hover,
+    .editor-shell.theme-system .secondary-button:hover {
+      background: var(--dark-surface-hover);
+    }
+  }
+
+  .editor-shell.theme-system .editor-toolbar,
+  .editor-shell.theme-system .search-panel {
+    --search-separator: var(--dark-border);
+    --toolbar-icon-bg: var(--dark-surface);
+    --toolbar-icon-fg: var(--dark-text);
+    --toolbar-icon-hover-bg: var(--dark-surface-hover);
+    --toolbar-icon-hover-border: var(--dark-border);
+    --toolbar-icon-active-bg: var(--dark-text);
+    --toolbar-icon-active-fg: var(--dark-surface);
+    --toolbar-icon-disabled-bg: var(--dark-surface);
+    --toolbar-icon-disabled-border: var(--dark-muted);
+    --toolbar-icon-disabled-fg: var(--dark-muted);
+  }
+
+  .editor-shell.theme-system .toolbar-separator {
+    background: var(--dark-border);
+  }
+
+  .editor-shell.theme-system .editor-message {
+    border-bottom: 1px solid var(--dark-border);
+    background: var(--dark-surface);
+    color: var(--dark-text);
+  }
+
+  .editor-shell.theme-system .storage-inline-status {
+    color: var(--dark-text);
+  }
+
+  /* Status-tone parity for system dark mode (mirrors the .theme-dark block). */
+  .editor-shell.theme-system .save-status.save-status-dirty,
+  .editor-shell.theme-system .save-status.save-status-saving {
+    color: #fbbf24;
+  }
+
+  .editor-shell.theme-system .save-status.save-status-error {
+    color: #f87171;
+  }
+
+  .editor-shell.theme-system .storage-inline-status.storage-inline-status-ready {
+    color: #34d399;
+  }
+
+  .editor-shell.theme-system .storage-inline-status.storage-inline-status-pending-sync,
+  .editor-shell.theme-system .storage-inline-status.storage-inline-status-offline {
+    color: #fbbf24;
+  }
+
+  .editor-shell.theme-system .storage-inline-status.storage-inline-status-conflict,
+  .editor-shell.theme-system .storage-inline-status.storage-inline-status-error {
+    color: #f87171;
+  }
+
+  .editor-shell.theme-system .editor-host .cm-gutters {
+    border-right: 1px solid var(--dark-border);
+    background: var(--dark-gutter-bg);
+    color: var(--dark-muted);
+  }
+
+  .editor-shell.theme-system .editor-host .cm-lineNumbers .cm-gutterElement {
+    color: var(--dark-muted);
+  }
+
+  @media (hover: hover) {
+    .editor-shell.theme-system .editor-host .cm-lineNumbers .cm-gutterElement:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+  }
+
+  .editor-shell.theme-system .editor-host .cm-activeLine,
+  .editor-shell.theme-system .editor-host .cm-activeLineGutter {
+    background: var(--dark-line-bg);
+  }
+
+  .editor-shell.theme-system .editor-host .cm-cursor {
+    border-left-color: var(--dark-text);
+  }
+
+  .editor-shell.theme-system .editor-host .cm-unfocused-caret {
+    border-left-color: var(--dark-muted);
+  }
+
+  .editor-shell.theme-system .editor-host .cm-selectionBackground,
+  .editor-shell.theme-system .editor-host .cm-focused .cm-selectionBackground {
+    background: var(--dark-selection-bg) !important;
+  }
+
+  .editor-shell.theme-system .editor-host .cm-content ::selection {
+    background: var(--dark-selection-bg);
+    color: var(--dark-text);
+  }
+
+  .editor-shell.theme-system .editor-host .cm-search-match {
+    background: var(--dark-search-match-bg);
+    color: var(--dark-text);
+  }
+}
+
+.editor-shell .secondary-button:disabled,
+.editor-shell .secondary-button:disabled:hover {
+  border-color: var(--toolbar-icon-disabled-border);
+  background: var(--toolbar-icon-disabled-bg);
+  color: var(--toolbar-icon-disabled-fg);
+  cursor: default;
+  opacity: 1;
+}
+
+/* Muted-but-tappable (aria-disabled) actions must shade exactly like
+   :disabled in every theme: same late-cascade companion as the rule above,
+   minus cursor (the button stays tappable to explain itself on tap). */
+.editor-shell .secondary-button.is-muted,
+.editor-shell .secondary-button.is-muted:hover {
+  border-color: var(--toolbar-icon-disabled-border);
+  background: var(--toolbar-icon-disabled-bg);
+  color: var(--toolbar-icon-disabled-fg);
+  opacity: 1;
+}
+
+.editor-shell .secondary-button.is-active,
+.editor-shell .secondary-button.is-active:hover {
+  border-color: var(--toolbar-icon-active-bg);
+  background: var(--toolbar-icon-active-bg);
+  color: var(--toolbar-icon-active-fg);
+}
+
+.help-dialog-actions .help-back-button:disabled,
+.help-dialog-actions .help-back-button:disabled:hover {
+  border-color: #d1d5db;
+  background: #ffffff;
+  color: #9ca3af;
+  cursor: default;
+  opacity: 1;
+}
+
+.app-shell.theme-dark .help-dialog-actions .help-back-button:disabled,
+.app-shell.theme-dark .help-dialog-actions .help-back-button:disabled:hover,
+.editor-shell.theme-dark .help-dialog-actions .help-back-button:disabled,
+.editor-shell.theme-dark .help-dialog-actions .help-back-button:disabled:hover {
+  border-color: var(--dark-muted);
+  background: var(--dark-surface);
+  color: var(--dark-muted);
+  cursor: default;
+  opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-shell.theme-system .help-dialog-actions .help-back-button:disabled,
+  .app-shell.theme-system .help-dialog-actions .help-back-button:disabled:hover,
+  .editor-shell.theme-system .help-dialog-actions .help-back-button:disabled,
+  .editor-shell.theme-system .help-dialog-actions .help-back-button:disabled:hover {
+    border-color: var(--dark-muted);
+    background: var(--dark-surface);
+    color: var(--dark-muted);
+    cursor: default;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Do NOT override align-items here. `.app-shell` is a row-direction flex
+     container, so align-items is the VERTICAL (cross) axis; `stretch` forced the
+     panel to the viewport height while its content stayed taller, spilling the
+     draft-action buttons out below the frame's border on short windows. The base
+     `safe center` keeps the panel at content height and lets the shell scroll, so
+     the frame always contains the buttons. (Horizontal fit is unaffected — the
+     panel's own `width: min(100%, 560px)` already makes it full-width here.) */
+  .app-shell {
+    padding: calc(20px + var(--safe-top)) calc(20px + var(--safe-right))
+      calc(20px + var(--safe-bottom)) calc(20px + var(--safe-left));
+  }
+
+  .auth-panel {
+    padding: 24px;
+  }
+
+  .brand-row {
+    align-items: flex-start;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .editor-toolbar {
+    padding: calc(12px + var(--safe-top)) calc(12px + var(--safe-right)) 12px
+      calc(12px + var(--safe-left));
+  }
+
+  .search-panel {
+    padding: 8px calc(12px + var(--safe-right)) 8px calc(12px + var(--safe-left));
+    /* Restack the find and replace rows into one column at the same breakpoint
+       where the Markdown preview swaps from side-by-side to overlay, so both
+       layouts switch together. */
+    grid-template-columns: 1fr;
+  }
+
+  /* No gutter when stacked, so drop the divider that separates the two halves. */
+  .replace-panel-row {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .search-actions {
+    justify-content: flex-end;
+  }
+
+  .save-as-dialog {
+    width: 100%;
+  }
+
+  .settings-dialog {
+    width: 100%;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Dropbox conflict resolution (SPEC §9) ---- */
+
+.conflict-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-left: var(--safe-left);
+  margin-right: var(--safe-right);
+  padding: 10px 12px;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.conflict-banner p {
+  margin: 0;
+  margin-right: auto;
+  font-size: 14px;
+}
+
+/* The conflict editor and the status/non-mergeable dialogs render inside the
+   shared .dialog-backdrop. */
+.conflict-editor {
+  display: flex;
+  flex-direction: column;
+  width: min(760px, 96vw);
+  /* Cap against the same available height the .dialog-backdrop leaves (its 20px
+     top/bottom padding plus the safe-area insets), so the modal never exceeds
+     the visible area. */
+  max-height: min(92svh, calc(100svh - 40px - var(--safe-top) - var(--safe-bottom)));
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ce-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.ce-head h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.ce-count {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ce-bulk {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ce-doc {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.ce-clean {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #111827;
+}
+
+.ce-conflict {
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.ce-conflict-head {
+  padding: 5px 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6b7280;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* The hunks are clickable choice buttons; reset button chrome but keep the grid. */
+.ce-side {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 10px;
+  align-items: start;
+  width: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.ce-side + .ce-side {
+  border-top: 1px dashed #d1d5db;
+}
+
+.ce-pick:hover {
+  box-shadow: inset 0 0 0 2px rgba(37, 99, 235, 0.4);
+}
+
+.ce-pick:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
+.ce-local {
+  background: #e8f0ff;
+}
+
+.ce-remote {
+  background: #fff3e0;
+}
+
+.ce-who {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ce-local .ce-who {
+  color: #1d4ed8;
+}
+
+.ce-remote .ce-who {
+  color: #b45309;
+}
+
+.ce-lines {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ce-empty {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.ce-choose {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Edit row sits at the lower-left of an unresolved conflict. */
+.ce-choose-edit {
+  justify-content: flex-start;
+}
+
+.ce-hint {
+  margin: 0;
+  padding: 0 16px 10px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ce-edit {
+  padding: 8px 10px;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ce-textarea {
+  width: 100%;
+  min-height: 64px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13.5px;
+  padding: 8px;
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  resize: vertical;
+}
+
+.ce-resolved {
+  display: grid;
+  grid-template-columns: 88px 1fr auto;
+  gap: 10px;
+  align-items: start;
+  padding: 9px 10px;
+}
+
+.ce-resolved.ce-local {
+  background: #e8f0ff;
+}
+
+.ce-resolved.ce-remote {
+  background: #fff3e0;
+}
+
+.ce-resolved.ce-edited {
+  background: #f1f5f9;
+}
+
+.ce-resolved.ce-both {
+  background: #ecfdf5;
+}
+
+.ce-tag {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.ce-change {
+  border: none;
+  background: none;
+  color: #2563eb;
+  font: inherit;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.ce-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #d1d5db;
+}
+
+.ce-foot-spacer {
+  margin-left: auto;
+}
+
+.conflict-status-dialog {
+  width: min(440px, 94vw);
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 18px 18px 14px;
+}
+
+.conflict-status-dialog h2 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.conflict-status-dialog p {
+  margin: 0 0 12px;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+/* Dark theme (explicit + system) */
+.editor-shell.theme-dark .conflict-editor,
+.editor-shell.theme-dark .conflict-status-dialog {
+  background: var(--dark-surface);
+  color: var(--dark-text);
+  border-color: var(--dark-border);
+}
+
+.editor-shell.theme-dark .ce-head,
+.editor-shell.theme-dark .ce-bulk,
+.editor-shell.theme-dark .ce-conflict,
+.editor-shell.theme-dark .ce-conflict-head,
+.editor-shell.theme-dark .ce-choose,
+.editor-shell.theme-dark .ce-edit,
+.editor-shell.theme-dark .ce-side + .ce-side,
+.editor-shell.theme-dark .ce-foot {
+  border-color: var(--dark-border);
+}
+
+.editor-shell.theme-dark .ce-clean,
+.editor-shell.theme-dark .conflict-status-dialog p {
+  color: var(--dark-text);
+}
+
+.editor-shell.theme-dark .ce-conflict-head,
+.editor-shell.theme-dark .ce-hint {
+  color: var(--dark-muted);
+}
+
+.editor-shell.theme-dark .ce-conflict-head {
+  background: var(--dark-line-bg);
+}
+
+.editor-shell.theme-dark .ce-local,
+.editor-shell.theme-dark .ce-resolved.ce-local {
+  background: #14233f;
+}
+
+.editor-shell.theme-dark .ce-remote,
+.editor-shell.theme-dark .ce-resolved.ce-remote {
+  background: #3a2a12;
+}
+
+/* Resolved-block tints need dark backgrounds too, or the white conflict-editor
+   text is unreadable on the light light-mode tints. (ce-edited was missing one.) */
+.editor-shell.theme-dark .ce-resolved.ce-both {
+  background: #12281f;
+}
+
+.editor-shell.theme-dark .ce-resolved.ce-edited {
+  background: #1e293b;
+}
+
+/* The tag's light-mode slate (#374151) is too dark on the dark resolved tints. */
+.editor-shell.theme-dark .ce-tag {
+  color: #cbd5e1;
+}
+
+.editor-shell.theme-dark .ce-local .ce-who {
+  color: #9cc1ff;
+}
+
+.editor-shell.theme-dark .ce-remote .ce-who {
+  color: #f0b860;
+}
+
+.editor-shell.theme-dark .conflict-banner {
+  background: #2a2207;
+  color: #fcd34d;
+  border-color: #b45309;
+}
+
+@media (prefers-color-scheme: dark) {
+  .editor-shell.theme-system .conflict-editor,
+  .editor-shell.theme-system .conflict-status-dialog {
+    background: var(--dark-surface);
+    color: var(--dark-text);
+    border-color: var(--dark-border);
+  }
+
+  .editor-shell.theme-system .ce-head,
+  .editor-shell.theme-system .ce-bulk,
+  .editor-shell.theme-system .ce-conflict,
+  .editor-shell.theme-system .ce-conflict-head,
+  .editor-shell.theme-system .ce-choose,
+  .editor-shell.theme-system .ce-edit,
+  .editor-shell.theme-system .ce-side + .ce-side,
+  .editor-shell.theme-system .ce-foot {
+    border-color: var(--dark-border);
+  }
+
+  .editor-shell.theme-system .ce-clean,
+  .editor-shell.theme-system .conflict-status-dialog p {
+    color: var(--dark-text);
+  }
+
+  .editor-shell.theme-system .ce-conflict-head {
+    background: var(--dark-line-bg);
+    color: var(--dark-muted);
+  }
+
+  .editor-shell.theme-system .ce-hint {
+    color: var(--dark-muted);
+  }
+
+  .editor-shell.theme-system .ce-local,
+  .editor-shell.theme-system .ce-resolved.ce-local {
+    background: #14233f;
+  }
+
+  .editor-shell.theme-system .ce-remote,
+  .editor-shell.theme-system .ce-resolved.ce-remote {
+    background: #3a2a12;
+  }
+
+  .editor-shell.theme-system .ce-resolved.ce-both {
+    background: #12281f;
+  }
+
+  .editor-shell.theme-system .ce-resolved.ce-edited {
+    background: #1e293b;
+  }
+
+  .editor-shell.theme-system .ce-tag {
+    color: #cbd5e1;
+  }
+
+  .editor-shell.theme-system .ce-local .ce-who {
+    color: #9cc1ff;
+  }
+
+  .editor-shell.theme-system .ce-remote .ce-who {
+    color: #f0b860;
+  }
+
+  .editor-shell.theme-system .conflict-banner {
+    background: #2a2207;
+    color: #fcd34d;
+    border-color: #b45309;
+  }
+}
+
+/* Dropbox file browser dialog (SPEC §9). Reuses the settings-dialog shell;
+   these rules style the listing inside it. */
+.dropbox-browser-dialog {
+  --dropbox-browser-max-height: min(
+    720px,
+    calc(
+      var(--dropbox-browser-viewport-height, 100dvh) - 40px - var(--safe-top) -
+        var(--safe-bottom)
+    )
+  );
+
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 560px);
+  max-height: var(--dropbox-browser-max-height);
+  overflow: hidden;
+  /* iOS keyboard avoidance: the dialog is centred in a fixed backdrop and the
+     page is scroll-locked, so the on-screen keyboard can hide the filename box.
+     The App tracks the visual viewport while this browser is open, constrains
+     the dialog to the visible height, and sets --dropbox-browser-shift to lift
+     the focused filename input when needed. */
+  transform: translateY(var(--dropbox-browser-shift, 0px));
+}
+
+.dropbox-browser {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: auto;
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dropbox-browser > h2,
+.dropbox-browser-breadcrumb,
+.dropbox-browser-headers,
+.dropbox-browser-destination,
+.dropbox-browser-actions,
+.dropbox-browser-status,
+.dialog-error {
+  flex: 0 0 auto;
+}
+
+.dropbox-browser-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  font-size: 0.9rem;
+  min-width: 0;
+}
+
+.dropbox-browser-crumb {
+  border: none;
+  background: none;
+  padding: 2px 4px;
+  font-size: inherit;
+  color: #2563eb;
+  cursor: pointer;
+  max-width: 12em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropbox-browser-crumb.is-current {
+  color: inherit;
+  font-weight: 600;
+  cursor: default;
+}
+
+.dropbox-browser-crumb-ellipsis {
+  color: #6b7280;
+  padding: 0 2px;
+}
+
+.dropbox-browser-crumb:not(.is-current)::after {
+  content: ' ›';
+  color: #9ca3af;
+}
+
+.dropbox-browser-headers {
+  display: grid;
+  grid-template-columns: 1fr 7em 5em;
+  gap: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 2px;
+}
+
+.dropbox-browser-headers button {
+  border: none;
+  background: none;
+  padding: 4px 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropbox-browser-headers button:nth-child(2),
+.dropbox-browser-headers button:nth-child(3) {
+  text-align: right;
+}
+
+.dropbox-browser-list {
+  flex: 1 1 auto;
+  list-style: none;
+  margin: 0;
+  min-height: 4rem;
+  padding: 0;
+  max-height: min(45dvh, 380px);
+  overflow-y: auto;
+}
+
+@media (max-height: 520px) {
+  .dropbox-browser-dialog {
+    height: var(--dropbox-browser-max-height);
+  }
+
+  .dropbox-browser {
+    height: 100%;
+  }
+
+  .dropbox-browser-list {
+    flex: 1 1 0;
+    min-height: 0;
+    max-height: none;
+  }
+}
+
+.dropbox-browser-row {
+  display: grid;
+  grid-template-columns: 1fr 7em 5em;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  border: none;
+  background: none;
+  /* Touch-target height on mobile (SPEC §9 interaction rules). */
+  min-height: 44px;
+  padding: 6px 4px;
+  font-size: 0.95rem;
+  text-align: left;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.dropbox-browser-row.is-folder {
+  grid-template-columns: 1fr;
+}
+
+button.dropbox-browser-row {
+  cursor: pointer;
+}
+
+button.dropbox-browser-row:hover,
+button.dropbox-browser-row:focus-visible {
+  background: #f3f4f6;
+}
+
+.dropbox-browser-row.is-folder .dropbox-browser-name::before {
+  content: '📁 ';
+}
+
+.dropbox-browser-row.is-ineligible {
+  color: #9ca3af;
+}
+
+.dropbox-browser-row.is-marked {
+  background: #eff6ff;
+}
+
+.dropbox-browser-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.dropbox-browser-modified,
+.dropbox-browser-size {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.dropbox-browser-status {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding: 12px 4px;
+  color: #6b7280;
+}
+
+.dropbox-browser-manual,
+.dropbox-browser-destination {
+  display: grid;
+  gap: 6px;
+}
+
+.dropbox-browser-keyboard-up .dropbox-browser {
+  gap: 8px;
+}
+
+.dropbox-browser-keyboard-up .dropbox-browser > h2,
+.dropbox-browser-keyboard-up .dropbox-browser-breadcrumb,
+.dropbox-browser-keyboard-up .dropbox-browser-headers,
+.dropbox-browser-keyboard-up .dropbox-browser-list,
+.dropbox-browser-keyboard-up .dropbox-browser-status {
+  display: none;
+}
+
+.password-dialog {
+  display: grid;
+  gap: 8px;
+}
+
+.password-input-row {
+  position: relative;
+}
+
+.password-input-row > input {
+  min-width: 0;
+  width: 100%;
+  padding-right: 76px;
+}
+
+.password-text-input.is-masked {
+  -webkit-text-security: disc;
+}
+
+.password-peek-button {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  min-height: 30px;
+  min-width: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  background: #fff;
+  color: #111827;
+  padding: 0 8px;
+  font-weight: 700;
+}
+
+/* The Show/Hide eye icon inherits the button's text color (currentColor) so it
+   themes with light/dark, like the toolbar icons. */
+.password-peek-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.password-peek-button:disabled {
+  opacity: 0.5;
+}
+
+/* Create / Change Password `Secret key` slide-toggle (SPEC §6/§10). The native
+   checkbox is visually hidden but keyboard-focusable; the track/thumb is the
+   slide. Disabled (no key available) dims the row. */
+.password-option-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.password-option-toggle.is-disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.password-option-toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.password-option-toggle-track {
+  position: relative;
+  flex: none;
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  background: #c2c8d0;
+  transition: background 0.15s ease;
+}
+
+.password-option-toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s ease;
+}
+
+.password-option-toggle-input:checked + .password-option-toggle-track {
+  background: #2563eb;
+}
+
+.password-option-toggle-input:checked + .password-option-toggle-track::after {
+  transform: translateX(16px);
+}
+
+.password-option-toggle-input:focus-visible + .password-option-toggle-track {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.password-option-toggle-text {
+  font-weight: 600;
+}
+
+/* Unlock dialog inline `Secret key` disclosure for a required-v1 file (SPEC §10). */
+.secret-key-disclosure {
+  display: grid;
+  gap: 6px;
+}
+
+.secret-key-disclosure-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: start;
+  border: none;
+  background: none;
+  padding: 2px 0;
+  font-weight: 600;
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.secret-key-input {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Dark variants: inputs/labels/h2 inherit from the .settings-dialog dark
+   rules; only the browser-specific chrome needs explicit dark colors. The
+   shells define the --dark-* palette (see the theme-dark block above). */
+.app-shell.theme-dark .dropbox-browser-crumb:not(.is-current),
+.editor-shell.theme-dark .dropbox-browser-crumb:not(.is-current) {
+  color: #7eb3f5;
+}
+
+.app-shell.theme-dark .dropbox-browser-headers,
+.editor-shell.theme-dark .dropbox-browser-headers {
+  border-bottom-color: var(--dark-border);
+}
+
+.app-shell.theme-dark .dropbox-browser-row,
+.editor-shell.theme-dark .dropbox-browser-row {
+  border-bottom-color: var(--dark-surface-hover);
+}
+
+.app-shell.theme-dark button.dropbox-browser-row:hover,
+.app-shell.theme-dark button.dropbox-browser-row:focus-visible,
+.editor-shell.theme-dark button.dropbox-browser-row:hover,
+.editor-shell.theme-dark button.dropbox-browser-row:focus-visible {
+  background: var(--dark-surface-hover);
+}
+
+.app-shell.theme-dark .dropbox-browser-row.is-marked,
+.editor-shell.theme-dark .dropbox-browser-row.is-marked {
+  background: #2b3340;
+}
+
+.app-shell.theme-dark .password-peek-button,
+.editor-shell.theme-dark .password-peek-button {
+  border-color: var(--dark-border);
+  background: var(--dark-surface);
+  color: var(--dark-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-shell.theme-system .dropbox-browser-crumb:not(.is-current),
+  .editor-shell.theme-system .dropbox-browser-crumb:not(.is-current) {
+    color: #7eb3f5;
+  }
+
+  .app-shell.theme-system .dropbox-browser-headers,
+  .editor-shell.theme-system .dropbox-browser-headers {
+    border-bottom-color: var(--dark-border);
+  }
+
+  .app-shell.theme-system .dropbox-browser-row,
+  .editor-shell.theme-system .dropbox-browser-row {
+    border-bottom-color: var(--dark-surface-hover);
+  }
+
+  .app-shell.theme-system button.dropbox-browser-row:hover,
+  .app-shell.theme-system button.dropbox-browser-row:focus-visible,
+  .editor-shell.theme-system button.dropbox-browser-row:hover,
+  .editor-shell.theme-system button.dropbox-browser-row:focus-visible {
+    background: var(--dark-surface-hover);
+  }
+
+  .app-shell.theme-system .dropbox-browser-row.is-marked,
+  .editor-shell.theme-system .dropbox-browser-row.is-marked {
+    background: #2b3340;
+  }
+
+  .app-shell.theme-system .password-peek-button,
+  .editor-shell.theme-system .password-peek-button {
+    border-color: var(--dark-border);
+    background: var(--dark-surface);
+    color: var(--dark-text);
+  }
+}
+
+/* ---- Home Dropbox block (SPEC §9/§15) ---- */
+
+.dropbox-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  /* The block is a grid item of `.dropbox-status-card`; without this its
+     automatic minimum size is the recents table's min-content (~34rem), which
+     would force the whole column wider than a narrow viewport instead of
+     letting the recents table scroll horizontally inside it (SPEC §15). */
+  min-width: 0;
+}
+
+.dropbox-block-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dropbox-block-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.dropbox-block-title .toolbar-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Inline Dropbox status next to the "Dropbox" label (home, SPEC §9). Sits right
+   after the title and pushes the corner Sync/Relink button to the far right; the
+   tone colour comes from the message-error/message-info classes. */
+.dropbox-block-message {
+  margin-left: 0.5rem;
+  margin-right: auto;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Deliberately small and visually subordinate (SPEC 15): never reads as a
+   primary action. */
+.dropbox-block-corner {
+  font-size: 0.78rem;
+  padding: 0.2rem 0.55rem;
+}
+
+.dropbox-block-link {
+  width: 100%;
+}
+
+.dropbox-block-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.dropbox-block-actions > button {
+  flex: 0 0 auto;
+}
+
+.dropbox-block-browse {
+  display: inline-grid;
+  min-width: 34px;
+  place-items: center;
+  padding: 0;
+}
+
+.dropbox-block-browse .toolbar-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.dropbox-recents {
+  border: 1px solid #d6dbe3;
+  border-radius: 6px;
+  max-height: 14rem;
+  /* Vertical scroll under the sticky header as always; horizontal scroll kicks
+     in only when the table hits its min-width on a narrow container (a phone in
+     portrait, especially the 4-column Dropbox table) — SPEC §15. */
+  overflow: auto;
+  /* Allow this flex item to shrink below the table's min-width so the
+     overflow-x scroll engages instead of widening the block. */
+  min-width: 0;
+}
+
+.dropbox-recents-empty {
+  border: 1px dashed #d6dbe3;
+  border-radius: 6px;
+  color: #5b6470;
+  font-size: 0.85rem;
+  margin: 0;
+  padding: 0.8rem;
+  text-align: center;
+}
+
+.dropbox-recents-table {
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  table-layout: fixed;
+  width: 100%;
+  /* The min-width floor is set inline per column count (DropboxRecentFiles):
+     below it the table keeps that width and `.dropbox-recents` scrolls
+     horizontally rather than crushing the columns (SPEC §15). The fraction-
+     based column widths then apportion the table's width. */
+}
+
+.dropbox-recents-table th {
+  /* Opaque + z-index so rows scrolling under the sticky header are occluded,
+     not seen through it (the header had no background otherwise). Column widths
+     come from the <colgroup> (resizable), not from fixed per-column rules. */
+  background: #f9fafb;
+  border-bottom: 1px solid #d6dbe3;
+  font-weight: 600;
+  overflow: hidden;
+  padding: 0.4rem 0.5rem;
+  position: sticky;
+  text-align: left;
+  text-overflow: ellipsis;
+  top: 0;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.dropbox-recents-header {
+  display: block;
+  min-width: 0;
+  padding-right: 0.6rem;
+}
+
+.dropbox-recents-header-label {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: grab;
+  font: inherit;
+  font-weight: inherit;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropbox-recents-header-label:active {
+  cursor: grabbing;
+}
+
+.dropbox-recents-header-label:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.dropbox-recents-order-controls {
+  display: inline-flex;
+  gap: 0.1rem;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.dropbox-recents-table th:focus-within .dropbox-recents-order-controls,
+.dropbox-recents-table th.is-column-controls-active .dropbox-recents-order-controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dropbox-recents-table th.is-column-dragging {
+  opacity: 0.75;
+}
+
+.dropbox-recents-table th.is-column-drop-target::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: #2563eb;
+  z-index: 2;
+}
+
+.dropbox-recents-order-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 0;
+  border-radius: 4px;
+  background: #f9fafb;
+  color: #5b6470;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dropbox-recents-order-button:hover,
+.dropbox-recents-order-button:focus-visible {
+  background: #e7eaef;
+  color: #1f2933;
+}
+
+.dropbox-recents-order-button:disabled,
+.dropbox-recents-order-button:disabled:hover {
+  background: #f9fafb;
+  color: #a8b0ba;
+  cursor: default;
+}
+
+.dropbox-recents-order-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* Drag the header separators to resize columns (persisted). A header-row grab
+   zone at each resizable column's right edge; the faint line shows on hover. */
+.dropbox-recents-resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  width: 11px;
+  height: 100%;
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.dropbox-recents-resizer::after {
+  content: '';
+  position: absolute;
+  top: 25%;
+  right: 4px;
+  bottom: 25%;
+  width: 2px;
+  border-radius: 1px;
+  background: transparent;
+}
+
+@media (hover: hover) {
+  .dropbox-recents-resizer:hover::after {
+    background: #9aa3af;
+  }
+}
+
+.dropbox-recents-resizer:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -3px;
+}
+
+/* Touch resizing (SPEC §15): the grab zones live only in the header row, so a
+   swipe on the body still scrolls the table freely — only a drag that starts on
+   a header-edge handle resizes (touch-action: none + pointer capture keep it
+   from scrolling). On coarse pointers widen the zone to a tappable size and
+   show a faint persistent grip, since there is no hover to reveal it. */
+@media (pointer: coarse) {
+  .dropbox-recents-order-controls {
+    /* Keep the focus/tap fallback clear of the widened touch resize handle. */
+    right: 1.7rem;
+  }
+
+  .dropbox-recents-order-button {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+
+  .dropbox-recents-resizer {
+    width: 22px;
+  }
+
+  .dropbox-recents-resizer::after {
+    background: #c2c8d0;
+  }
+}
+
+.dropbox-recents-table tbody tr {
+  border-bottom: 1px solid #e7eaef;
+  cursor: pointer;
+  /* Long-press opens the row menu: suppress the platform text-selection
+     callout (SPEC 9). */
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+.dropbox-recents-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* 44px touch targets, matching the Dropbox browser rows. */
+.dropbox-recents-table td {
+  overflow: hidden;
+  padding: 0.72rem 0.5rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropbox-recents-table tbody tr:hover,
+.dropbox-recents-table tbody tr:focus-visible {
+  background: #f3f6fa;
+}
+
+.dropbox-recents-table tbody tr.is-selected {
+  background: #eff6ff;
+}
+
+/* Left-truncation (SPEC 9): the ellipsis sits at the START so the direct
+   parent folder name stays visible at the right edge. The rtl direction only
+   moves the overflow side; the inner span renders the path itself ltr. */
+.dropbox-recents-path {
+  direction: rtl;
+  text-align: left;
+}
+
+.dropbox-recents-path span {
+  unicode-bidi: plaintext;
+}
+
+/* A row with unsynced/diverged changes bolds the name (the dot is attached
+   with no separating space). */
+.dropbox-recents-name-dirty {
+  font-weight: 700;
+}
+
+.dropbox-recents-synced {
+  color: #5b6470;
+}
+
+.dropbox-recents-synced.is-message {
+  text-align: left;
+}
+
+/* Session indicators from the background revision check (SPEC 9). Color is
+   never the only signal: diverged/replacement-candidate add the bullet name
+   prefix, missing replaces the Last synced text, ineligible shows the real
+   ineligible name. */
+.dropbox-recents-table tbody tr.is-diverged,
+.dropbox-recents-table tbody tr.is-replacement-candidate {
+  color: #b3261e;
+}
+
+.dropbox-recents-table tbody tr.is-diverged .dropbox-recents-synced,
+.dropbox-recents-table tbody tr.is-replacement-candidate .dropbox-recents-synced {
+  color: #b3261e;
+}
+
+.dropbox-recents-table tbody tr.is-missing,
+.dropbox-recents-table tbody tr.is-ineligible {
+  color: #9ca3af;
+}
+
+.dropbox-recents-table tbody tr.is-missing .dropbox-recents-synced,
+.dropbox-recents-table tbody tr.is-ineligible .dropbox-recents-synced {
+  color: #9ca3af;
+}
+
+.app-shell.theme-dark .dropbox-recents,
+.editor-shell.theme-dark .dropbox-recents,
+.app-shell.theme-dark .dropbox-recents-empty,
+.editor-shell.theme-dark .dropbox-recents-empty {
+  border-color: var(--dark-border);
+}
+
+.app-shell.theme-dark .dropbox-recents-table th,
+.editor-shell.theme-dark .dropbox-recents-table th {
+  background: var(--dark-surface);
+  border-bottom-color: var(--dark-border);
+}
+
+.app-shell.theme-dark .dropbox-recents-order-button,
+.editor-shell.theme-dark .dropbox-recents-order-button {
+  background: var(--dark-surface);
+  color: #cbd5e1;
+}
+
+.app-shell.theme-dark .dropbox-recents-order-button:hover,
+.app-shell.theme-dark .dropbox-recents-order-button:focus-visible,
+.editor-shell.theme-dark .dropbox-recents-order-button:hover,
+.editor-shell.theme-dark .dropbox-recents-order-button:focus-visible {
+  background: #293548;
+  color: #f8fafc;
+}
+
+.app-shell.theme-dark .dropbox-recents-order-button:disabled,
+.app-shell.theme-dark .dropbox-recents-order-button:disabled:hover,
+.editor-shell.theme-dark .dropbox-recents-order-button:disabled,
+.editor-shell.theme-dark .dropbox-recents-order-button:disabled:hover {
+  background: var(--dark-surface);
+  color: #64748b;
+}
+
+@media (hover: hover) {
+  .app-shell.theme-dark .dropbox-recents-resizer:hover::after,
+  .editor-shell.theme-dark .dropbox-recents-resizer:hover::after {
+    background: var(--dark-muted);
+  }
+}
+
+.app-shell.theme-dark .dropbox-recents-table tbody tr,
+.editor-shell.theme-dark .dropbox-recents-table tbody tr {
+  border-bottom-color: var(--dark-surface-hover);
+}
+
+.app-shell.theme-dark .dropbox-recents-table tbody tr:hover,
+.editor-shell.theme-dark .dropbox-recents-table tbody tr:hover {
+  background: var(--dark-surface-hover);
+}
+
+.app-shell.theme-dark .dropbox-recents-table tbody tr.is-selected,
+.editor-shell.theme-dark .dropbox-recents-table tbody tr.is-selected {
+  background: #2b3340;
+}
+
+.app-shell.theme-dark .dropbox-recents-table tbody tr.is-diverged,
+.editor-shell.theme-dark .dropbox-recents-table tbody tr.is-diverged,
+.app-shell.theme-dark .dropbox-recents-table tbody tr.is-replacement-candidate,
+.editor-shell.theme-dark .dropbox-recents-table tbody tr.is-replacement-candidate,
+.app-shell.theme-dark .dropbox-recents-table tbody tr.is-diverged .dropbox-recents-synced,
+.editor-shell.theme-dark .dropbox-recents-table tbody tr.is-diverged .dropbox-recents-synced,
+.app-shell.theme-dark
+  .dropbox-recents-table
+  tbody
+  tr.is-replacement-candidate
+  .dropbox-recents-synced,
+.editor-shell.theme-dark
+  .dropbox-recents-table
+  tbody
+  tr.is-replacement-candidate
+  .dropbox-recents-synced {
+  color: #f2b8b5;
+}
+
+.app-shell.theme-dark .dropbox-recents-table tbody tr.is-missing,
+.editor-shell.theme-dark .dropbox-recents-table tbody tr.is-missing,
+.app-shell.theme-dark .dropbox-recents-table tbody tr.is-ineligible,
+.editor-shell.theme-dark .dropbox-recents-table tbody tr.is-ineligible,
+.app-shell.theme-dark .dropbox-recents-table tbody tr.is-missing .dropbox-recents-synced,
+.editor-shell.theme-dark .dropbox-recents-table tbody tr.is-missing .dropbox-recents-synced,
+.app-shell.theme-dark .dropbox-recents-table tbody tr.is-ineligible .dropbox-recents-synced,
+.editor-shell.theme-dark .dropbox-recents-table tbody tr.is-ineligible .dropbox-recents-synced {
+  color: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-shell.theme-system .dropbox-recents,
+  .editor-shell.theme-system .dropbox-recents,
+  .app-shell.theme-system .dropbox-recents-empty,
+  .editor-shell.theme-system .dropbox-recents-empty {
+    border-color: var(--dark-border);
+  }
+
+  .app-shell.theme-system .dropbox-recents-table th,
+  .editor-shell.theme-system .dropbox-recents-table th {
+    background: var(--dark-surface);
+    border-bottom-color: var(--dark-border);
+  }
+
+  .app-shell.theme-system .dropbox-recents-order-button,
+  .editor-shell.theme-system .dropbox-recents-order-button {
+    background: var(--dark-surface);
+    color: #cbd5e1;
+  }
+
+  .app-shell.theme-system .dropbox-recents-order-button:hover,
+  .app-shell.theme-system .dropbox-recents-order-button:focus-visible,
+  .editor-shell.theme-system .dropbox-recents-order-button:hover,
+  .editor-shell.theme-system .dropbox-recents-order-button:focus-visible {
+    background: #293548;
+    color: #f8fafc;
+  }
+
+  .app-shell.theme-system .dropbox-recents-order-button:disabled,
+  .app-shell.theme-system .dropbox-recents-order-button:disabled:hover,
+  .editor-shell.theme-system .dropbox-recents-order-button:disabled,
+  .editor-shell.theme-system .dropbox-recents-order-button:disabled:hover {
+    background: var(--dark-surface);
+    color: #64748b;
+  }
+
+  .app-shell.theme-system .dropbox-recents-resizer:hover::after,
+  .editor-shell.theme-system .dropbox-recents-resizer:hover::after {
+    background: var(--dark-muted);
+  }
+
+  .app-shell.theme-system .dropbox-recents-table tbody tr,
+  .editor-shell.theme-system .dropbox-recents-table tbody tr {
+    border-bottom-color: var(--dark-surface-hover);
+  }
+
+  .app-shell.theme-system .dropbox-recents-table tbody tr:hover,
+  .editor-shell.theme-system .dropbox-recents-table tbody tr:hover {
+    background: var(--dark-surface-hover);
+  }
+
+  .app-shell.theme-system .dropbox-recents-table tbody tr.is-selected,
+  .editor-shell.theme-system .dropbox-recents-table tbody tr.is-selected {
+    background: #2b3340;
+  }
+
+  .app-shell.theme-system .dropbox-recents-table tbody tr.is-diverged,
+  .editor-shell.theme-system .dropbox-recents-table tbody tr.is-diverged,
+  .app-shell.theme-system .dropbox-recents-table tbody tr.is-replacement-candidate,
+  .editor-shell.theme-system .dropbox-recents-table tbody tr.is-replacement-candidate,
+  .app-shell.theme-system .dropbox-recents-table tbody tr.is-diverged .dropbox-recents-synced,
+  .editor-shell.theme-system .dropbox-recents-table tbody tr.is-diverged .dropbox-recents-synced,
+  .app-shell.theme-system
+    .dropbox-recents-table
+    tbody
+    tr.is-replacement-candidate
+    .dropbox-recents-synced,
+  .editor-shell.theme-system
+    .dropbox-recents-table
+    tbody
+    tr.is-replacement-candidate
+    .dropbox-recents-synced {
+    color: #f2b8b5;
+  }
+
+  .app-shell.theme-system .dropbox-recents-table tbody tr.is-missing,
+  .editor-shell.theme-system .dropbox-recents-table tbody tr.is-missing,
+  .app-shell.theme-system .dropbox-recents-table tbody tr.is-ineligible,
+  .editor-shell.theme-system .dropbox-recents-table tbody tr.is-ineligible,
+  .app-shell.theme-system .dropbox-recents-table tbody tr.is-missing .dropbox-recents-synced,
+  .editor-shell.theme-system .dropbox-recents-table tbody tr.is-missing .dropbox-recents-synced,
+  .app-shell.theme-system .dropbox-recents-table tbody tr.is-ineligible .dropbox-recents-synced,
+  .editor-shell.theme-system .dropbox-recents-table tbody tr.is-ineligible .dropbox-recents-synced {
+    color: #6b7280;
+  }
+}

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="31 31 450 450" role="img" aria-label="QR grid scan icon closer corners black">
+  <rect width="512" height="512" fill="none"/>
+
+  <g fill="none" stroke="#000000" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 152 104 H 104 V 152"/>
+    <path d="M 360 104 H 408 V 152"/>
+    <path d="M 104 360 V 408 H 152"/>
+    <path d="M 360 408 H 408 V 360"/>
+  </g>
+
+<path d="M 133.00 133.00 H 241.00 V 241.00 H 133.00 Z
+           M 151.00 151.00 H 223.00 V 223.00 H 151.00 Z"
+        fill="#000000" fill-rule="evenodd"/>
+  <rect x="173.00" y="173.00" width="28.00" height="28.00" fill="#000000"/>
+  <path d="M 271.00 133.00 H 379.00 V 241.00 H 271.00 Z
+           M 289.00 151.00 H 361.00 V 223.00 H 289.00 Z"
+        fill="#000000" fill-rule="evenodd"/>
+  <rect x="311.00" y="173.00" width="28.00" height="28.00" fill="#000000"/>
+  <path d="M 133.00 271.00 H 241.00 V 379.00 H 133.00 Z
+           M 151.00 289.00 H 223.00 V 361.00 H 151.00 Z"
+        fill="#000000" fill-rule="evenodd"/>
+  <rect x="173.00" y="311.00" width="28.00" height="28.00" fill="#000000"/>
+  <rect x="311.50" y="276.50" width="27.00" height="27.00" fill="#000000"/>
+  <rect x="346.50" y="276.50" width="27.00" height="27.00" fill="#000000"/>
+  <rect x="276.50" y="311.50" width="27.00" height="27.00" fill="#000000"/>
+  <rect x="311.50" y="311.50" width="27.00" height="27.00" fill="#000000"/>
+  <rect x="276.50" y="346.50" width="27.00" height="27.00" fill="#000000"/>
+  <rect x="346.50" y="346.50" width="27.00" height="27.00" fill="#000000"/>
+</svg>
