@@ -160,9 +160,9 @@ type MessageTone = 'error' | 'info'
 // shows messages in its own area regardless of scope.
 type MessageScope = 'global' | 'dropbox' | 'local'
 
-// How long an info-tone message stays before dismissing itself (SPEC §16).
-// Error-tone messages never auto-dismiss.
-const MESSAGE_AUTO_DISMISS_MS = 5_000
+// How long ordinary transient messages stay before dismissing themselves
+// (SPEC §16). Durable states use dialogs or persistent banners instead.
+const MESSAGE_AUTO_DISMISS_MS = 2_000
 const SOFT_LOCK_RETRY_MS = 10_000
 const SECRET_KEY_REQUIRED_UNLOCK_MESSAGE =
   "Enter this file's Secret key, or add it in Settings."
@@ -1311,8 +1311,8 @@ function App() {
     sessionDocumentKind,
   )
   // First-sync gate (SPEC §9): true while the open Dropbox file session is
-  // known remotely changed — the editor shows `File changed on Dropbox. Sync
-  // is paused.` and every save goes cache-only (no push) until the state
+  // known remotely changed — the editor shows `File changed on Dropbox.` and
+  // every save goes cache-only (no push) until the state
   // changes (conflict resolution commits, or the session ends). Ref + state
   // pair: the save path reads it synchronously, the banner renders from it.
   const dropboxSessionPausedRef = useRef(false)
@@ -2084,18 +2084,30 @@ function App() {
   const [isEditorFocused, setIsEditorFocused] = useState(false)
   const [isKeyboardUp, setIsKeyboardUp] = useState(false)
 
-  // Track the iOS visual viewport so the editor surface equals the area above
-  // the on-screen keyboard: iOS does not shrink the layout viewport (or `dvh`)
-  // for the keyboard, so without this the shell's bottom (and, via the locked
-  // page, its top chrome) is occluded and scrolling "sticks". `.editor-shell`
-  // consumes `--app-viewport-height`. Height-only for now; `offsetTop` panning
-  // is a device-gated follow-up. Active only while the editor is mounted.
+  // Track the iOS visual viewport so the editor surface equals the visible
+  // region above the on-screen keyboard. iOS can miss visualViewport events
+  // while the app is backgrounded across an orientation change, so foreground
+  // events also re-read the viewport after layout has had a frame to settle.
   useEffect(() => {
     const viewport = typeof window !== 'undefined' ? window.visualViewport : null
     if (!isUnlocked || !viewport) {
       return undefined
     }
     const root = document.documentElement
+    let resumeFrame = 0
+    let settledResumeFrame = 0
+    const requestFrame = (callback: FrameRequestCallback) =>
+      typeof window.requestAnimationFrame === 'function'
+        ? window.requestAnimationFrame(callback)
+        : window.setTimeout(() => callback(window.performance.now()), 0)
+    const cancelFrame = (handle: number) => {
+      if (typeof window.cancelAnimationFrame === 'function') {
+        window.cancelAnimationFrame(handle)
+      } else {
+        window.clearTimeout(handle)
+      }
+    }
+
     const apply = () => {
       root.style.setProperty('--app-viewport-height', `${viewport.height}px`)
 
@@ -2119,12 +2131,53 @@ function App() {
         window.scrollTo(0, 0)
       }
     }
+
+    const applyAfterForegroundSettles = () => {
+      apply()
+
+      if (resumeFrame) {
+        cancelFrame(resumeFrame)
+      }
+      if (settledResumeFrame) {
+        cancelFrame(settledResumeFrame)
+      }
+
+      resumeFrame = requestFrame(() => {
+        resumeFrame = 0
+        apply()
+        settledResumeFrame = requestFrame(() => {
+          settledResumeFrame = 0
+          apply()
+        })
+      })
+    }
+
+    const applyWhenVisible = () => {
+      if (document.visibilityState === 'visible') {
+        applyAfterForegroundSettles()
+      }
+    }
+
     apply()
     viewport.addEventListener('resize', apply)
     viewport.addEventListener('scroll', apply)
+    document.addEventListener('visibilitychange', applyWhenVisible)
+    window.addEventListener('focus', applyAfterForegroundSettles)
+    window.addEventListener('pageshow', applyAfterForegroundSettles)
+    window.addEventListener('orientationchange', applyAfterForegroundSettles)
     return () => {
       viewport.removeEventListener('resize', apply)
       viewport.removeEventListener('scroll', apply)
+      document.removeEventListener('visibilitychange', applyWhenVisible)
+      window.removeEventListener('focus', applyAfterForegroundSettles)
+      window.removeEventListener('pageshow', applyAfterForegroundSettles)
+      window.removeEventListener('orientationchange', applyAfterForegroundSettles)
+      if (resumeFrame) {
+        cancelFrame(resumeFrame)
+      }
+      if (settledResumeFrame) {
+        cancelFrame(settledResumeFrame)
+      }
       root.style.removeProperty('--app-viewport-height')
       root.style.removeProperty('--app-viewport-offset-top')
       setIsKeyboardUp(false)
@@ -7045,28 +7098,19 @@ function App() {
   const effectiveSearchMessageTone: MessageTone = searchValidationMessage
     ? 'error'
     : searchMessageTone
-  // Search feedback is split by tone: the green match summary ("3 of 3",
-  // "Replaced 2 matches.") shows in the status bar while the panel is open; red
-  // errors keep their place in the message area below the toolbar. The
-  // empty-query case stays silent (handled by searchValidationMessage above).
-  const searchInfoMessage =
-    isSearchPanelOpen && effectiveSearchMessage && effectiveSearchMessageTone === 'info'
-      ? effectiveSearchMessage
-      : ''
-  const searchErrorMessage =
-    effectiveSearchMessage && effectiveSearchMessageTone === 'error' ? effectiveSearchMessage : ''
-  // Live match count, updated as the query (or the document) changes — no
-  // navigation needed. A command result ("2 of 3", "Replaced
-  // 3 matches.") outranks it until the next query/option change clears the
-  // command message; an empty or invalid query shows nothing. A capped scan
-  // shows "10000+ matches" rather than claiming an exact total.
-  const statusbarSearchText =
-    searchInfoMessage ||
-    (isSearchPanelOpen && searchValidation.ok && liveMatchCount !== null
+  // Search feedback stays in the status bar so opening errors and match counts
+  // never resize the editor. A command/validation message outranks the live count
+  // until the next query/option change clears it; empty queries stay silent.
+  const liveSearchCountText =
+    isSearchPanelOpen && searchValidation.ok && liveMatchCount !== null
       ? liveMatchCount.limited
         ? `${liveMatchCount.count}+ matches`
         : `${liveMatchCount.count} ${liveMatchCount.count === 1 ? 'match' : 'matches'}`
-      : '')
+      : ''
+  const statusbarSearchText =
+    isSearchPanelOpen && effectiveSearchMessage ? effectiveSearchMessage : liveSearchCountText
+  const statusbarSearchTone: MessageTone =
+    isSearchPanelOpen && effectiveSearchMessage ? effectiveSearchMessageTone : 'info'
   const effectiveReadOnly = isReadOnly || isAppReadOnlySession
   const isDropboxFileSession = sessionDocumentKind === 'dropbox-file'
   const hasDropboxConflict =
@@ -7246,6 +7290,16 @@ function App() {
           </button>
           <button
             type="button"
+            className="secondary-button compact-button toolbar-icon-button"
+            aria-label="Change password"
+            disabled={isAppReadOnlySession}
+            title="Change password"
+            onClick={() => void changePassword()}
+          >
+            <ToolbarIcon icon={changePasswordIcon} />
+          </button>
+          <button
+            type="button"
             className={`secondary-button compact-button toolbar-icon-button settings-toggle${
               isSettingsDialogOpen ? ' is-active' : ''
             }`}
@@ -7280,23 +7334,6 @@ function App() {
           >
             <ToolbarIcon icon={redoIcon} />
           </button>
-          {isMarkdownMode ? (
-            <>
-              <span className="toolbar-separator" aria-hidden="true" />
-              <button
-                type="button"
-                className={`secondary-button compact-button toolbar-icon-button preview-toggle${
-                  isPreviewVisible ? ' is-active' : ''
-                }`}
-                aria-label="Preview markdown"
-                aria-pressed={isPreviewVisible}
-                title="Preview markdown"
-                onClick={togglePreview}
-              >
-                <ToolbarIcon icon={markdownIcon} />
-              </button>
-            </>
-          ) : null}
           <span className="toolbar-separator" aria-hidden="true" />
           <button
             type="button"
@@ -7307,16 +7344,6 @@ function App() {
             onClick={insertRandomString}
           >
             <ToolbarIcon icon={randomStringIcon} />
-          </button>
-          <button
-            type="button"
-            className="secondary-button compact-button toolbar-icon-button"
-            aria-label="Change password"
-            disabled={isAppReadOnlySession}
-            title="Change password"
-            onClick={() => void changePassword()}
-          >
-            <ToolbarIcon icon={changePasswordIcon} />
           </button>
           <span className="toolbar-separator" aria-hidden="true" />
           {editorStorageProviderKind === 'local-file' ? (
@@ -7379,10 +7406,10 @@ function App() {
               </button>
             </>
           )}
-          {/* Search sits at the far right of the actions row: a
-              separator after all the save-related buttons, then the Search
-              toggle. handleSearchToggleButton focuses the Find field inside the
-              tap so iOS raises the keyboard. */}
+          {/* Search stays after the save-related buttons. In Markdown mode, the
+              preview toggle sits after Search at the end of the row.
+              handleSearchToggleButton focuses the Find field inside the tap so
+              iOS raises the keyboard. */}
           <span className="toolbar-separator" aria-hidden="true" />
           <button
             type="button"
@@ -7397,6 +7424,23 @@ function App() {
           >
             <ToolbarIcon icon={searchIcon} />
           </button>
+          {isMarkdownMode ? (
+            <>
+              <span className="toolbar-separator" aria-hidden="true" />
+              <button
+                type="button"
+                className={`secondary-button compact-button toolbar-icon-button preview-toggle${
+                  isPreviewVisible ? ' is-active' : ''
+                }`}
+                aria-label="Preview markdown"
+                aria-pressed={isPreviewVisible}
+                title="Preview markdown"
+                onClick={togglePreview}
+              >
+                <ToolbarIcon icon={markdownIcon} />
+              </button>
+            </>
+          ) : null}
         </div>
       </header>
 
@@ -7929,53 +7973,34 @@ function App() {
       ) : null}
       {helpDialogElement}
 
-      {!isSoftLocked && (message || searchErrorMessage || showResolveBanner) ? (
-        <div className="editor-messages">
-          {message ? (
-            <DismissibleBanner
-              text={message}
-              className={`editor-message message-${messageTone}`}
-              onDismiss={clearMessage}
-              dismissLabel="Dismiss message"
-            />
-          ) : null}
-          {searchErrorMessage ? (
-            <p className="editor-message message-error">{searchErrorMessage}</p>
-          ) : null}
-          {showResolveBanner ? (
-            // The Resolve banner is driven by the session's STORED sync state —
-            // the first-sync
-            // gate (paused), a diverged background result (also paused), or a
-            // 409-captured conflict (storageStatus === 'conflict') — so it
-            // covers every way a conflict arises, not only a live failure.
-            // Resolve CAPTURES the conflict first, then enters the merge
-            // (resolveEditorConflict); offline it explains resolution needs a
-            // connection while editing + cache autosave continue, and Export
-            // stays reachable throughout (a conflicted session can always
-            // download an encrypted copy of the current local text).
-            <section className="conflict-banner" aria-label="Dropbox conflict">
-              <p>
-                {isOffline
-                  ? 'File changed on Dropbox. Resolving needs a connection; your changes are saved locally.'
-                  : 'File changed on Dropbox.'}
-              </p>
-              <button
-                type="button"
-                className="secondary-button compact-button"
-                onClick={() => void exportLocalConflictCopy()}
-              >
-                Export local
-              </button>
-              <button
-                type="button"
-                className="primary-button compact-button"
-                aria-disabled={isOffline}
-                onClick={() => void resolveEditorConflict()}
-              >
-                Resolve…
-              </button>
-            </section>
-          ) : null}
+      {!isSoftLocked && showResolveBanner ? (
+        <div className="editor-conflict-row">
+          {/* The Resolve banner is driven by the session's STORED sync state —
+              the first-sync gate (paused), a diverged background result (also
+              paused), or a 409-captured conflict (storageStatus === 'conflict')
+              — so it covers every way a conflict arises, not only a live failure.
+              Resolve CAPTURES the conflict first, then enters the merge
+              (resolveEditorConflict); editing + cache autosave continue, and
+              Export stays reachable throughout (a conflicted session can always
+              download an encrypted copy of the current local text). */}
+          <section className="conflict-banner" aria-label="Dropbox conflict">
+            <p>File changed on Dropbox.</p>
+            <button
+              type="button"
+              className="secondary-button compact-button"
+              onClick={() => void exportLocalConflictCopy()}
+            >
+              Export local
+            </button>
+            <button
+              type="button"
+              className="primary-button compact-button"
+              aria-disabled={isOffline}
+              onClick={() => void resolveEditorConflict()}
+            >
+              Resolve…
+            </button>
+          </section>
         </div>
       ) : null}
 
@@ -8141,6 +8166,14 @@ function App() {
           <div className="editor-soft-lock-blackout" aria-hidden="true" />
         ) : (
           <>
+            {message ? (
+              <DismissibleBanner
+                text={message}
+                className={`editor-toast message-${messageTone}`}
+                onDismiss={clearMessage}
+                dismissLabel="Dismiss message"
+              />
+            ) : null}
             <CodeMirrorEditor
               ref={editorRef}
               autocapitalize={settings.autocapitalize}
@@ -8196,7 +8229,9 @@ function App() {
             </span>
           </div>
           {statusbarSearchText ? (
-            <div className="statusbar-group statusbar-search">
+            <div
+              className={`statusbar-group statusbar-search statusbar-search-${statusbarSearchTone}`}
+            >
               <span className="statusbar-item">{statusbarSearchText}</span>
             </div>
           ) : null}

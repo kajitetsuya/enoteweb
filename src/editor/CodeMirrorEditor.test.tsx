@@ -1,4 +1,5 @@
 import { createRef } from 'react'
+import { EditorView } from '@codemirror/view'
 import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { CodeMirrorEditor } from './CodeMirrorEditor'
@@ -63,6 +64,54 @@ describe('CodeMirrorEditor focus reporting', () => {
 
     act(() => content.blur())
     await waitFor(() => expect(onFocusChange).toHaveBeenLastCalledWith(false))
+  })
+})
+
+describe('CodeMirrorEditor viewport resume', () => {
+  it('remeasures when the app returns visible without a viewport resize event', async () => {
+    class FakeViewport extends EventTarget {
+      height = window.innerHeight
+      offsetTop = 0
+      scale = 1
+    }
+
+    const previousViewport = Object.getOwnPropertyDescriptor(window, 'visualViewport')
+    const previousVisibility = Object.getOwnPropertyDescriptor(document, 'visibilityState')
+    const requestMeasure = vi.spyOn(EditorView.prototype, 'requestMeasure')
+
+    Object.defineProperty(window, 'visualViewport', {
+      configurable: true,
+      value: new FakeViewport(),
+    })
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      value: 'visible',
+    })
+
+    try {
+      render(<CodeMirrorEditor value="" onChange={() => {}} {...baseProps} />)
+      requestMeasure.mockClear()
+
+      act(() => {
+        document.dispatchEvent(new Event('visibilitychange'))
+      })
+
+      await waitFor(() => expect(requestMeasure).toHaveBeenCalled())
+    } finally {
+      requestMeasure.mockRestore()
+
+      if (previousViewport) {
+        Object.defineProperty(window, 'visualViewport', previousViewport)
+      } else {
+        delete (window as { visualViewport?: unknown }).visualViewport
+      }
+
+      if (previousVisibility) {
+        Object.defineProperty(document, 'visibilityState', previousVisibility)
+      } else {
+        delete (document as { visibilityState?: unknown }).visibilityState
+      }
+    }
   })
 })
 

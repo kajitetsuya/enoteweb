@@ -28,9 +28,8 @@ test('edits, exports, imports, and saves as a separate encrypted file', async ({
 
   const editor = page.locator('.cm-content')
 
-  const toolbarControlNames = await page
-    .locator('.toolbar-actions > *')
-    .evaluateAll((elements) =>
+  const readToolbarControlNames = () =>
+    page.locator('.toolbar-actions > *').evaluateAll((elements) =>
       elements.map((element) =>
         element.classList.contains('toolbar-separator')
           ? 'separator'
@@ -38,26 +37,27 @@ test('edits, exports, imports, and saves as a separate encrypted file', async ({
       ),
     )
 
+  const toolbarControlNames = await readToolbarControlNames()
+
   // A Dropbox-mode draft session's storage actions:
   // Save to Dropbox (the promotion) + Export to Files — no Save button; the
-  // draft persists via autosave. Search sits at the far right of the row, after
-  // a separator following the save-related buttons.
+  // draft persists via autosave. Search sits after the save-related buttons.
   expect(toolbarControlNames).toEqual([
     'Undo',
     'Redo',
     'separator',
     'Insert random string',
-    'Change password',
     'separator',
     'Save to Dropbox',
     'Export to Files',
     'separator',
     'Search',
   ])
-  // Home sits left of the status text; Read-only and Settings form the corner
-  // group. At desktop width all three toolbar groups share one row.
+  // Home sits left of the status text; Read-only, Change Password, and Settings
+  // form the corner group. At desktop width all three toolbar groups share one row.
   await expect(page.locator('.toolbar-status button[aria-label="Home"]')).toBeVisible()
   await expect(page.locator('.toolbar-corner button[aria-label="Read-only"]')).toBeVisible()
+  await expect(page.locator('.toolbar-corner button[aria-label="Change password"]')).toBeVisible()
   await expect(page.locator('.toolbar-corner button[aria-label="Settings"]')).toBeVisible()
   const wideStatusBox = await page.locator('.toolbar-status').boundingBox()
   const wideActionsBox = await page.locator('.toolbar-actions').boundingBox()
@@ -105,9 +105,11 @@ test('edits, exports, imports, and saves as a separate encrypted file', async ({
   await page.getByLabel('Find text').fill('(')
   await regexButton.click()
   await expect(page.getByText('Invalid regex.')).toBeVisible()
-  // Errors (red) stay in the message area below the toolbar, not the status bar.
-  await expect(page.locator('.editor-messages').getByText('Invalid regex.')).toBeVisible()
-  await expect(page.locator('.editor-statusbar').getByText('Invalid regex.')).toHaveCount(0)
+  // Search errors stay in the status bar, not in an editor message row that
+  // would resize the editor.
+  await expect(page.locator('.editor-statusbar').getByText('Invalid regex.')).toBeVisible()
+  await expect(page.locator('.statusbar-search-error').getByText('Invalid regex.')).toBeVisible()
+  await expect(page.locator('.editor-toast').getByText('Invalid regex.')).toHaveCount(0)
   await expect(findPreviousButton).toBeDisabled()
   await expect(findNextButton).toBeDisabled()
   await expect(replacePreviousButton).toBeDisabled()
@@ -136,6 +138,26 @@ test('edits, exports, imports, and saves as a separate encrypted file', async ({
   await page.getByRole('button', { name: 'Close' }).click()
   await expect(page.getByRole('dialog', { name: 'Settings' })).toHaveCount(0)
   await expect(settingsButton).toHaveAttribute('aria-expanded', 'false')
+
+  await settingsButton.click()
+  await page.getByLabel('Editor mode').selectOption('markdown')
+  await page.getByRole('button', { name: 'Close' }).click()
+  expect(await readToolbarControlNames()).toEqual([
+    'Undo',
+    'Redo',
+    'separator',
+    'Insert random string',
+    'separator',
+    'Save to Dropbox',
+    'Export to Files',
+    'separator',
+    'Search',
+    'separator',
+    'Preview markdown',
+  ])
+  await settingsButton.click()
+  await page.getByLabel('Editor mode').selectOption('plain')
+  await page.getByRole('button', { name: 'Close' }).click()
 
   await page.setViewportSize({ width: 517, height: 572 })
   const findInputBox = await page.getByLabel('Find text').boundingBox()
@@ -200,7 +222,7 @@ test('edits, exports, imports, and saves as a separate encrypted file', async ({
   await expect(page.getByText('1 of 2')).toBeVisible()
   // The green match summary shows in the status bar, not the message area.
   await expect(page.locator('.editor-statusbar').getByText('1 of 2')).toBeVisible()
-  await expect(page.locator('.editor-messages').getByText('1 of 2')).toHaveCount(0)
+  await expect(page.locator('.editor-toast').getByText('1 of 2')).toHaveCount(0)
   await expect(page.locator('.cm-search-match')).toHaveCount(1)
   await expect(page.locator('.cm-search-match-selected')).toHaveCount(1)
   await expect(page.locator('.cm-selectionMatch:not(.cm-selectionMatch-main)')).toHaveCount(1)

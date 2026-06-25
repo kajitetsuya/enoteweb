@@ -315,6 +315,78 @@ describe('Draft home actions', () => {
     }
   })
 
+  it('refreshes editor viewport variables when the app returns visible', async () => {
+    class FakeViewport extends EventTarget {
+      height = window.innerHeight - 300
+      offsetTop = 0
+      scale = 1
+    }
+
+    const fakeViewport = new FakeViewport()
+    const previousViewport = Object.getOwnPropertyDescriptor(window, 'visualViewport')
+    const previousScrollTo = Object.getOwnPropertyDescriptor(window, 'scrollTo')
+    const previousVisibility = Object.getOwnPropertyDescriptor(document, 'visibilityState')
+
+    Object.defineProperty(window, 'visualViewport', {
+      configurable: true,
+      value: fakeViewport,
+    })
+    Object.defineProperty(window, 'scrollTo', {
+      configurable: true,
+      value: () => undefined,
+    })
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      value: 'visible',
+    })
+
+    try {
+      render(<App />)
+
+      await createDraftThroughDialog('resume-viewport-pass')
+      const root = document.documentElement
+
+      await waitFor(() =>
+        expect(root.style.getPropertyValue('--app-viewport-height')).toBe(
+          `${fakeViewport.height}px`,
+        ),
+      )
+
+      fakeViewport.height = window.innerHeight - 123
+      fakeViewport.offsetTop = 37
+      expect(root.style.getPropertyValue('--app-viewport-height')).not.toBe(
+        `${fakeViewport.height}px`,
+      )
+
+      document.dispatchEvent(new Event('visibilitychange'))
+
+      await waitFor(() => {
+        expect(root.style.getPropertyValue('--app-viewport-height')).toBe(
+          `${fakeViewport.height}px`,
+        )
+        expect(root.style.getPropertyValue('--app-viewport-offset-top')).toBe('37px')
+      })
+    } finally {
+      if (previousViewport) {
+        Object.defineProperty(window, 'visualViewport', previousViewport)
+      } else {
+        delete (window as { visualViewport?: unknown }).visualViewport
+      }
+
+      if (previousScrollTo) {
+        Object.defineProperty(window, 'scrollTo', previousScrollTo)
+      } else {
+        delete (window as { scrollTo?: unknown }).scrollTo
+      }
+
+      if (previousVisibility) {
+        Object.defineProperty(document, 'visibilityState', previousVisibility)
+      } else {
+        delete (document as { visibilityState?: unknown }).visibilityState
+      }
+    }
+  })
+
   it('read-only hides the replace row but keeps the draft text', async () => {
     render(<App />)
 

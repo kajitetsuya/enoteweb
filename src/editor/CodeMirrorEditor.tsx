@@ -1074,35 +1074,92 @@ export const CodeMirrorEditor = forwardRef<EditorHandle, CodeMirrorEditorProps>(
       })
     }, [readOnly])
 
-    // iOS keyboard: when the on-screen keyboard resizes the visual viewport,
-    // the shell shrinks (App sizes it from visualViewport) but CodeMirror
-    // does not re-reveal the caret on its own — a caret near the bottom
-    // can stay hidden behind the keyboard. Nudge the selection
-    // back into view after each viewport resize while the editor has focus;
-    // the rAF lets the resized layout settle before measuring.
+    // iOS keyboard/app-switching: after the visual viewport changes, or after
+    // the app foregrounds from an orientation change, CodeMirror can keep stale
+    // geometry. Re-measure after layout settles, and reveal the caret when the
+    // editor still owns focus.
     useEffect(() => {
       const viewport = typeof window !== 'undefined' ? window.visualViewport : null
-
-      if (!viewport) {
-        return undefined
+      let measureFrame = 0
+      let settledMeasureFrame = 0
+      const requestFrame = (callback: FrameRequestCallback) =>
+        typeof window.requestAnimationFrame === 'function'
+          ? window.requestAnimationFrame(callback)
+          : window.setTimeout(() => callback(window.performance.now()), 0)
+      const cancelFrame = (handle: number) => {
+        if (typeof window.cancelAnimationFrame === 'function') {
+          window.cancelAnimationFrame(handle)
+        } else {
+          window.clearTimeout(handle)
+        }
       }
 
-      const revealSelection = () => {
+      const syncEditorViewport = () => {
         const view = viewRef.current
 
-        if (!view || !view.hasFocus) {
+        if (!view) {
           return
         }
 
-        window.requestAnimationFrame(() => {
+        view.requestMeasure()
+
+        if (view.hasFocus) {
           view.dispatch({
             effects: EditorView.scrollIntoView(view.state.selection.main.head),
           })
+        }
+      }
+
+      const syncAfterLayout = () => {
+        if (measureFrame) {
+          cancelFrame(measureFrame)
+        }
+
+        measureFrame = requestFrame(() => {
+          measureFrame = 0
+          syncEditorViewport()
         })
       }
 
-      viewport.addEventListener('resize', revealSelection)
-      return () => viewport.removeEventListener('resize', revealSelection)
+      const syncAfterForegroundSettles = () => {
+        syncAfterLayout()
+
+        if (settledMeasureFrame) {
+          cancelFrame(settledMeasureFrame)
+        }
+
+        settledMeasureFrame = requestFrame(() => {
+          settledMeasureFrame = 0
+          syncAfterLayout()
+        })
+      }
+
+      const syncWhenVisible = () => {
+        if (document.visibilityState === 'visible') {
+          syncAfterForegroundSettles()
+        }
+      }
+
+      viewport?.addEventListener('resize', syncAfterLayout)
+      document.addEventListener('visibilitychange', syncWhenVisible)
+      window.addEventListener('focus', syncAfterForegroundSettles)
+      window.addEventListener('pageshow', syncAfterForegroundSettles)
+      window.addEventListener('orientationchange', syncAfterForegroundSettles)
+
+      return () => {
+        viewport?.removeEventListener('resize', syncAfterLayout)
+        document.removeEventListener('visibilitychange', syncWhenVisible)
+        window.removeEventListener('focus', syncAfterForegroundSettles)
+        window.removeEventListener('pageshow', syncAfterForegroundSettles)
+        window.removeEventListener('orientationchange', syncAfterForegroundSettles)
+
+        if (measureFrame) {
+          cancelFrame(measureFrame)
+        }
+        if (settledMeasureFrame) {
+          cancelFrame(settledMeasureFrame)
+        }
+      }
     }, [])
 
     useEffect(() => {

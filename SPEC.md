@@ -1442,10 +1442,10 @@ Remote change detected in a Dropbox file session (the editor **Resolve banner**,
 File changed on Dropbox.
 ```
 
-Offline, the same banner explains that resolution needs a connection:
+Offline, the same banner keeps that text; the editor's storage status already shows the offline state. Tapping **Resolve** while offline shows the transient action message:
 
 ```text
-File changed on Dropbox. Resolving needs a connection; your changes are saved locally.
+Resolving needs a connection. Your changes are saved locally and Export still works.
 ```
 
 Draft replacement and deletion confirmations (OK/Cancel):

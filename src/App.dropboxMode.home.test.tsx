@@ -836,7 +836,7 @@ describe('App home background check + first-sync gate', () => {
     expect(dropboxState.syncNow).toHaveBeenLastCalledWith()
   })
 
-  it('Resolve banner: offline explains resolution needs a connection and keeps Export reachable', async () => {
+  it('Resolve banner: offline keeps the unified conflict message and Export reachable', async () => {
     const onLineSpy = vi.spyOn(navigator, 'onLine', 'get')
 
     try {
@@ -845,11 +845,11 @@ describe('App home background check + first-sync gate', () => {
       expect(screen.getByRole('button', { name: 'Export to Files' })).not.toBeNull()
 
       // Now go offline; the 'offline' event bumps connectivity and re-renders
-      // the banner with its offline explanation.
+      // without changing the passive conflict text.
       onLineSpy.mockReturnValue(false)
       fireEvent(window, new Event('offline'))
 
-      expect(await screen.findByText(/Resolving needs a connection/)).not.toBeNull()
+      expect(await screen.findByText('File changed on Dropbox.')).not.toBeNull()
       // Export stays reachable while offline.
       expect(screen.getByRole('button', { name: 'Export to Files' })).not.toBeNull()
 

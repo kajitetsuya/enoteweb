@@ -420,7 +420,7 @@ h1 {
 }
 
 .form-message,
-.editor-message {
+.editor-toast {
   font-weight: 700;
 }
 
@@ -494,7 +494,7 @@ h1 {
   grid-template-areas:
     "toolbar"
     "search"
-    "messages"
+    "conflict"
     "sync"
     "editor"
     "statusbar";
@@ -513,9 +513,9 @@ h1 {
 }
 
 /* Two rows on narrow screens — (Home, status)
-   left and (Read-only, Settings) right on row 1, every other control on
-   row 2 — merging into a single row from 641px up, the same breakpoint
-   where the search panel and preview switch layouts. */
+   left and (Read-only, Change Password, Settings) right on row 1, every other
+   control on row 2 — merging into a single row from 641px up, the same
+   breakpoint where the search panel and preview switch layouts. */
 .editor-toolbar {
   grid-area: toolbar;
   min-width: 0;
@@ -567,7 +567,7 @@ h1 {
   gap: 6px;
 }
 
-/* The corner pair reads as mode controls on the one-row layout; no divider
+/* The corner controls read as mode controls on the one-row layout; no divider
    is needed on the two-row layout, where the corner stands alone. */
 .toolbar-corner-separator {
   display: none;
@@ -868,26 +868,51 @@ h1 {
   }
 }
 
-.editor-messages {
-  grid-area: messages;
+.editor-conflict-row {
+  grid-area: conflict;
   display: grid;
 }
 
-.editor-message {
+.editor-toast {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  z-index: 4;
+  width: max-content;
+  max-width: min(520px, calc(100% - 16px));
   margin: 0;
-  /* Side safe-area insets on the banner itself (not the grid parent) so the
-     full-bleed tone background keeps reaching the edges while text stays clear. */
-  padding: 10px calc(16px + var(--safe-right)) 10px calc(16px + var(--safe-left));
-  font-size: 13px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgb(15 23 42 / 0.16);
+  font-size: 11px;
+  line-height: 1.2;
+  transform: translateX(-50%);
+  align-items: center;
+  gap: 6px;
 }
 
-.editor-message.message-error {
-  border-bottom: 1px solid #fecaca;
+.editor-toast .dismissible-banner-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-toast .dismissible-banner-close {
+  width: 18px;
+  height: 18px;
+  margin: -3px -5px -3px 0;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.editor-toast.message-error {
+  border-color: #fecaca;
   background: #fef2f2;
 }
 
-.editor-message.message-info {
-  border-bottom: 1px solid #bbf7d0;
+.editor-toast.message-info {
+  border-color: #bbf7d0;
   background: #f0fdf4;
 }
 
@@ -926,6 +951,7 @@ h1 {
 
 .editor-region {
   grid-area: editor;
+  position: relative;
   display: flex;
   min-height: 0;
   min-width: 0;
@@ -1134,11 +1160,18 @@ h1 {
   justify-content: flex-end;
 }
 
-/* The search match summary ("3 of 3") lives in the status bar in the same green
-   as the info messages elsewhere; dark/system overrides follow the theme blocks. */
-.statusbar-search .statusbar-item {
-  color: #047857;
+/* Search feedback lives in the status bar so validation and command messages do
+   not resize the editor. */
+.statusbar-search {
   font-weight: 600;
+}
+
+.statusbar-search-info {
+  color: #047857;
+}
+
+.statusbar-search-error {
+  color: #b91c1c;
 }
 
 /* Keyboard-driven chrome retraction: `is-typing-in-editor`
@@ -1190,7 +1223,7 @@ h1 {
 }
 
 .editor-host .cm-content {
-  padding: 18px 16px 56px;
+  padding: 0 4px 56px 0;
   font-family: var(
     --editor-font-family,
     ui-monospace,
@@ -1226,6 +1259,18 @@ h1 {
 .editor-host .cm-selectionMatch,
 .editor-host .cm-selectionMatch-main {
   background: transparent;
+}
+
+.editor-host .cm-lineNumbers {
+  font-family: var(
+    --editor-font-family,
+    ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    'Liberation Mono',
+    monospace
+  );
+  font-variant-numeric: tabular-nums;
 }
 
 /* Line numbers are clickable: a click copies that line's last word to the
@@ -1660,7 +1705,7 @@ h1 {
    dark theme they read dim, so brighten them (home auth panel + editor). Only
    the explicit dark theme darkens these surfaces, so scope it there. */
 .app-shell.theme-dark .message-error,
-.editor-shell.theme-dark .editor-message.message-error {
+.editor-shell.theme-dark .editor-toast.message-error {
   color: #ff6b6b;
 }
 
@@ -1670,20 +1715,19 @@ h1 {
 }
 
 .app-shell.theme-dark .message-info,
-.editor-shell.theme-dark .editor-message.message-info {
+.editor-shell.theme-dark .editor-toast.message-info {
   color: #4ade80;
 }
 
-/* Editor message banners get a dark tinted surface in dark mode (the light
-   pink/green fills are for light backgrounds only, so they would otherwise show
-   as bright panels on the near-black editor). */
-.editor-shell.theme-dark .editor-message.message-error {
-  border-bottom-color: rgb(255 107 107 / 0.4);
+/* Editor toasts get a dark tinted surface in dark mode (the light pink/green
+   fills are for light backgrounds only). */
+.editor-shell.theme-dark .editor-toast.message-error {
+  border-color: rgb(255 107 107 / 0.4);
   background: rgb(255 107 107 / 0.12);
 }
 
-.editor-shell.theme-dark .editor-message.message-info {
-  border-bottom-color: rgb(74 222 128 / 0.4);
+.editor-shell.theme-dark .editor-toast.message-info {
+  border-color: rgb(74 222 128 / 0.4);
   background: rgb(74 222 128 / 0.12);
 }
 
@@ -1694,8 +1738,12 @@ h1 {
   }
 }
 
-.editor-shell.theme-dark .statusbar-search .statusbar-item {
+.editor-shell.theme-dark .statusbar-search-info {
   color: #34d399;
+}
+
+.editor-shell.theme-dark .statusbar-search-error {
+  color: #f87171;
 }
 
 .app-shell.theme-dark .brand-mark {
@@ -1927,8 +1975,8 @@ h1 {
   background: var(--dark-border);
 }
 
-.editor-shell.theme-dark .editor-message {
-  border-bottom: 1px solid var(--dark-border);
+.editor-shell.theme-dark .editor-toast {
+  border: 1px solid var(--dark-border);
   background: var(--dark-surface);
   color: var(--dark-text);
 }
@@ -2079,7 +2127,7 @@ h1 {
   }
 
   .app-shell.theme-system .message-error,
-  .editor-shell.theme-system .editor-message.message-error {
+  .editor-shell.theme-system .editor-toast.message-error {
     color: #f87171;
   }
 
@@ -2089,7 +2137,7 @@ h1 {
   }
 
   .app-shell.theme-system .message-info,
-  .editor-shell.theme-system .editor-message.message-info {
+  .editor-shell.theme-system .editor-toast.message-info {
     color: #34d399;
   }
 
@@ -2100,8 +2148,12 @@ h1 {
     }
   }
 
-  .editor-shell.theme-system .statusbar-search .statusbar-item {
+  .editor-shell.theme-system .statusbar-search-info {
     color: #34d399;
+  }
+
+  .editor-shell.theme-system .statusbar-search-error {
+    color: #f87171;
   }
 
   .app-shell.theme-system .brand-mark {
@@ -2291,8 +2343,8 @@ h1 {
     background: var(--dark-border);
   }
 
-  .editor-shell.theme-system .editor-message {
-    border-bottom: 1px solid var(--dark-border);
+  .editor-shell.theme-system .editor-toast {
+    border: 1px solid var(--dark-border);
     background: var(--dark-surface);
     color: var(--dark-text);
   }
